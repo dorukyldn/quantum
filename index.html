@@ -1,0 +1,1759 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Kuantum Tezgahı · Quantum Bench">
+<meta property="og:description" content="Süperiletken qubit donanımı, RF ölçüm cihazlarının ekranında. Superconducting qubit hardware on RF instrument screens.">
+<meta property="og:image" content="https://dorukyldn.github.io/quantum/kapak.jpg">
+<meta property="og:url" content="https://dorukyldn.github.io/quantum/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect x='1' y='5' width='38' height='30' rx='3' fill='%231a1f26'/%3E%3Crect x='5' y='9' width='21' height='22' rx='1.5' fill='%23030507'/%3E%3Cpath d='M6 25c3 0 4-11 6.5-11S15 27 17 27s2-6 3.5-6 2 3 4.5 3' stroke='%23f3d23e' fill='none' stroke-width='1.6'/%3E%3Ccircle cx='32' cy='13' r='2.4' fill='%23d4874a'/%3E%3C/svg%3E">
+<style>html,body{margin:0}img{max-width:100%}[hidden]{display:none!important}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}</style>
+<title>Kuantum Tezgahı</title>
+<meta name="author" content="Doruk Yıldön">
+<meta name="description" content="Kuantum Tezgahı: süperiletken qubit donanımı, RF ölçüm cihazlarının ekranında. Quantum Bench: superconducting qubit hardware on RF instrument screens.">
+<script>(function(){var l;try{l=localStorage.getItem('qb-lang')}catch(e){}if(l!=='tr'&&l!=='en'){l=((navigator.language||'').toLowerCase().indexOf('tr')===0)?'tr':'en'}document.documentElement.setAttribute('data-lang',l);document.documentElement.lang=l;})();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>/* Kuantum Tezgahı — RF ölçüm tezgahı: mat antrasit tezgah, cihaz çerçeveleri, siyah ekranlar ve gerçek cihaz iz renkleri; bakır = marka */
+:root{color-scheme:dark;
+  --bench:#0b0d10; --panel:#13171c; --bezel:#1a1f26; --bezel-hi:#232a33; --screen:#030507; --grat:#17252b; --grat-hi:#24383f;
+  --fg:#e6e9ed; --muted:#8f99a4; --line:#222a33;
+  --copper:#d4874a; --copper-soft:#2a1b10;
+  --t1:#f3d23e; --t2:#47d2e1; --t3:#e461d9; --t4:#63d36e;
+  --ok:#63d36e; --warn:#f1b64b; --bad:#f2796d;
+  --f-display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+[data-lang="en"] .tr,[data-lang="tr"] .en{display:none!important}
+*{box-sizing:border-box}
+html{background:var(--bench)}
+body{background:var(--bench);color:var(--fg);font:16px/1.6 var(--f-body);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bench)}
+a{color:var(--t2)}
+:focus-visible{outline:2px solid var(--t1);outline-offset:2px}
+::selection{background:var(--copper);color:var(--bench)}
+sub,sup{line-height:0}
+
+/* ---------- top bar ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in srgb,var(--bench) 90%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;padding-block:10px;max-width:1320px;margin:0 auto}
+.brand{display:flex;align-items:center;gap:12px;margin-right:auto;min-width:0;text-decoration:none;color:var(--fg)}
+.brand svg{width:40px;height:40px;flex:none}
+.brand b{display:block;font:700 24px/1 var(--f-display);letter-spacing:.06em;text-transform:uppercase}
+.brand small{display:block;font:11px/1.3 var(--f-mono);color:var(--muted);margin-top:3px;letter-spacing:.02em}
+.search{position:relative;flex:1 1 220px;max-width:360px}
+.search input{width:100%;font:14px var(--f-body);padding:8px 12px;border:1px solid var(--line);border-radius:4px;background:var(--panel);color:var(--fg)}
+.qres{position:absolute;left:0;right:0;top:calc(100% + 6px);background:var(--panel);border:1px solid var(--bezel-hi);border-radius:4px;box-shadow:0 14px 40px rgba(0,0,0,.6);max-height:60vh;overflow:auto;padding:6px}
+.qres a{display:block;padding:8px 10px;border-radius:3px;text-decoration:none;color:var(--fg)}
+.qres a:hover,.qres a:focus{background:var(--bezel)}
+.qres small{display:block;color:var(--muted);font-size:12.5px}
+.qres mark{background:var(--copper-soft);color:var(--copper)}
+.lang{display:inline-flex;border:1px solid var(--line);border-radius:4px;overflow:hidden;flex:none}
+.lang button{font:600 12px var(--f-mono);letter-spacing:.08em;padding:8px 12px;border:0;background:var(--panel);color:var(--muted);cursor:pointer}
+.lang button+button{border-left:1px solid var(--line)}
+.lang button[aria-pressed="true"]{background:var(--copper);color:var(--bench)}
+
+/* ---------- shell & nav ---------- */
+.shell{display:grid;grid-template-columns:230px minmax(0,1fr);gap:40px;max-width:1320px;margin:0 auto;padding-block:26px 40px}
+nav.side{position:sticky;top:calc(env(safe-area-inset-top,0px) + 76px);align-self:start;max-height:calc(100vh - 96px);overflow:auto;padding-right:4px}
+nav.side h5{font:600 11px var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--copper);margin:16px 0 4px}
+nav.side h5:first-child{margin-top:0}
+nav.side ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:1px}
+nav.side a{display:grid;grid-template-columns:28px 1fr;align-items:baseline;gap:4px;padding:5px 8px;border-radius:3px;text-decoration:none;color:var(--muted);font-size:14.5px;line-height:1.3}
+nav.side a .t{font:11px var(--f-mono);color:var(--muted)}
+nav.side a:hover{color:var(--fg);background:var(--panel)}
+nav.side a[aria-current="page"]{color:var(--fg);background:var(--bezel);box-shadow:inset 2px 0 0 var(--copper)}
+nav.side a[aria-current="page"] .t{color:var(--copper)}
+@media (max-width:900px){
+  .top{position:static}
+  .shell{grid-template-columns:minmax(0,1fr);gap:14px;padding-top:12px}
+  nav.side{position:static;max-height:none;overflow:visible}
+  nav.side .grp{display:contents}
+  nav.side h5{display:none}
+  nav.side .navwrap{display:flex;overflow-x:auto;gap:6px;padding-bottom:6px}
+  nav.side ol{flex-direction:row;gap:6px}
+  nav.side a{grid-template-columns:auto auto;white-space:nowrap;border:1px solid var(--line)}
+}
+
+/* ---------- type ---------- */
+main{min-width:0}
+section{min-width:0}
+.kicker{font:600 12px var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--copper)}
+h1,h2{font:700 clamp(34px,5.2vw,60px)/.98 var(--f-display);letter-spacing:.005em;margin:6px 0 14px;text-wrap:balance;text-transform:none}
+h2{font-size:clamp(30px,4.2vw,48px)}
+h3{font:600 clamp(22px,2.6vw,28px)/1.1 var(--f-display);letter-spacing:.01em;margin:40px 0 8px;text-wrap:balance}
+h4{font:600 15px/1.3 var(--f-body);margin:0 0 6px}
+p,li{max-width:68ch}
+.lede{font-size:18.5px;line-height:1.55;color:var(--fg);max-width:62ch}
+code,.mono{font-family:var(--f-mono);font-size:.9em}
+.eq{font:13.5px/1.65 var(--f-mono);background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:10px 14px;overflow-x:auto;white-space:pre;margin:12px 0}
+.fn{font:600 11px var(--f-mono);vertical-align:super;line-height:0;margin-left:1px}
+.fn a{text-decoration:none;color:var(--copper)}
+.dag{color:var(--warn);font-weight:600}
+
+/* prose with marginalia */
+.prose{display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:8px 32px;align-items:start}
+.prose>*{grid-column:1}
+.prose>aside{grid-column:2;font-size:13.5px;line-height:1.5;color:var(--muted);border-top:1px solid var(--copper);padding-top:8px;margin-top:6px}
+.prose>aside b{display:block;font:600 11px var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--copper);margin-bottom:4px}
+@media (max-width:1100px){.prose{grid-template-columns:minmax(0,1fr)}.prose>aside{grid-column:1;max-width:68ch}}
+
+/* ---------- hero ---------- */
+.hero{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:36px;align-items:center}
+@media (max-width:1000px){.hero{grid-template-columns:minmax(0,1fr)}}
+.sig{display:flex;align-items:center;gap:12px;margin-top:18px;font:13px var(--f-mono);color:var(--muted)}
+.sig b{font:600 15px var(--f-body);color:var(--fg)}
+.sig i{display:block;width:28px;height:1px;background:var(--copper)}
+.hero-img{position:relative;margin:0;border-radius:6px;overflow:hidden;border:1px solid var(--line);background:#000;aspect-ratio:4/5;max-height:620px;width:100%}
+.hero-img img{width:100%;height:100%;object-fit:cover;display:block}
+.hero-img canvas{position:absolute;right:14px;top:14px;width:128px;height:128px;border-radius:50%;background:rgba(3,5,7,.6);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid rgba(71,210,225,.35)}
+.hero-img figcaption{position:absolute;left:0;right:0;bottom:0;padding:30px 14px 10px;font-size:11.5px;line-height:1.4;color:#d7dde4;background:linear-gradient(transparent,rgba(0,0,0,.85))}
+.hero-img figcaption a,.credit a{color:inherit}
+.spec{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin:24px 0 0;border:1px solid var(--line);border-radius:4px;overflow:hidden}
+.spec div{padding:10px 12px;background:var(--panel);min-width:0}
+.spec div+div{border-left:1px solid var(--line)}
+.spec dt{font:11px var(--f-mono);color:var(--muted);letter-spacing:.04em}
+.spec dd{margin:4px 0 0;font:500 19px/1.1 var(--f-mono);color:var(--t1);font-variant-numeric:tabular-nums}
+@media (max-width:560px){.spec{grid-template-columns:repeat(2,minmax(0,1fr))}.spec div:nth-child(3){border-left:0}.spec div:nth-child(n+3){border-top:1px solid var(--line)}}
+.rack{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,210px),1fr));gap:10px;margin:22px 0}
+.rack a{display:flex;flex-direction:column;gap:6px;padding:12px 14px;border-radius:4px;background:linear-gradient(180deg,var(--bezel),var(--panel));border:1px solid var(--line);text-decoration:none;color:var(--fg);min-width:0}
+.rack a:hover{border-color:var(--copper)}
+.rack .face{display:flex;justify-content:space-between;align-items:center;font:600 11px var(--f-mono);letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
+.rack .led{width:7px;height:7px;border-radius:50%;background:var(--t4);box-shadow:0 0 8px var(--t4)}
+.rack b{font:600 19px/1.1 var(--f-display);letter-spacing:.02em}
+.rack span.d{font-size:13px;color:var(--muted);line-height:1.4}
+
+/* ---------- photos & figures ---------- */
+.photo{margin:20px 0;background:var(--panel);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.photo img{display:block;width:100%;height:auto;background:#000}
+.photo.light img{background:#fff;padding:10px;max-height:480px;object-fit:contain}
+.photo figcaption{padding:10px 14px 12px;font-size:14px}
+.credit{display:block;font-size:11.5px;color:var(--muted);margin-top:4px}
+.photos{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:14px;margin:20px 0}
+.photos .photo{margin:0}
+.photos .photo img{aspect-ratio:4/5;object-fit:cover}
+.fig{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:12px;overflow-x:auto;margin:18px 0}
+.fig figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.fig svg{display:block;max-width:100%;height:auto;margin:0 auto}
+
+/* ---------- instrument ---------- */
+.inst{background:linear-gradient(180deg,var(--bezel-hi),var(--bezel) 40px);border:1px solid #2b333d;border-radius:8px;padding:10px;margin:18px 0;box-shadow:0 1px 0 rgba(255,255,255,.04) inset,0 10px 30px rgba(0,0,0,.35);min-width:0}
+.inst-head{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:0 4px 8px;font:600 11.5px var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.inst-head b{color:var(--fg);letter-spacing:.14em}
+.inst-head .st{display:flex;align-items:center;gap:6px;color:var(--t4)}
+.inst-head .st::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--t4);box-shadow:0 0 8px var(--t4)}
+.inst-body{display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:10px}
+.inst-body.full{grid-template-columns:minmax(0,1fr)}
+@media (max-width:820px){.inst-body{grid-template-columns:minmax(0,1fr)}}
+.scr{background:var(--screen);border:1px solid #000;border-radius:4px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.03);min-width:0;display:flex;flex-direction:column}
+.scr canvas{display:block;width:100%;height:300px;border-radius:4px;background:var(--screen)}
+.scr canvas.h220{height:220px}.scr canvas.h360{height:360px}.scr canvas.sq{height:360px}
+.scr+.scr{margin-top:8px}
+.mk{font:12px/1.5 var(--f-mono);color:var(--fg);padding:6px 10px;border-top:1px solid var(--grat);display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:2px 16px;font-variant-numeric:tabular-nums}
+.mk span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.keys{display:flex;flex-direction:column;gap:8px;min-width:0}
+.keys .grp{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:8px}
+.keys .grp>b{display:block;font:600 10.5px var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--copper);margin-bottom:6px}
+.sk{display:block;font-size:12.5px;color:var(--muted);line-height:1.3;margin-top:6px}
+.sk:first-of-type{margin-top:0}
+.sk>input,.sk>select,.sk>.mono{display:block;margin-top:3px}
+.sk.chk{display:flex;align-items:center;gap:8px}
+.sk.chk input{width:auto;margin:0}
+input,select{font:14px var(--f-mono);padding:6px 8px;border:1px solid #2b333d;border-radius:3px;background:var(--screen);color:var(--t1);width:100%;min-width:0}
+input:focus,select:focus{border-color:var(--copper);outline:none}
+input[type=range]{accent-color:var(--copper);padding:0;background:transparent;border:0}
+input[type=checkbox]{accent-color:var(--copper)}
+.btn{font:600 12px var(--f-mono);letter-spacing:.06em;padding:7px 10px;border-radius:3px;border:1px solid #2f3843;background:linear-gradient(180deg,#2a313b,#1d232b);color:var(--fg);cursor:pointer;text-transform:uppercase}
+.btn:hover{border-color:var(--copper)}
+.btn.on,.btn.pri{background:var(--copper);border-color:var(--copper);color:var(--bench)}
+.btns{display:flex;flex-wrap:wrap;gap:6px}
+
+/* readouts */
+.out{margin:0;display:grid;border-top:1px solid var(--line)}
+.out .row{display:flex;justify-content:space-between;gap:12px;padding:5px 0;border-bottom:1px dashed var(--line);font-size:13.5px}
+.out dt{color:var(--muted)}
+.out dd{margin:0;font:500 13.5px var(--f-mono);font-variant-numeric:tabular-nums;text-align:right;color:var(--fg)}
+.out .warn dd{color:var(--warn)}.out .bad dd{color:var(--bad)}.out .good dd{color:var(--ok)}
+.msg{font-size:13px}.msg.bad{color:var(--bad)}
+.formula{font:12px/1.5 var(--f-mono);color:var(--muted);overflow-x:auto}
+.src{font-size:12.5px;color:var(--muted)}
+
+/* calculators */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:14px;margin:16px 0}
+.calc{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:14px;min-width:0;display:flex;flex-direction:column;gap:10px}
+.calc header{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.calc header h4{font:600 18px/1.15 var(--f-display);letter-spacing:.02em}
+.tag{font:500 10.5px var(--f-mono);letter-spacing:.06em;padding:2px 7px;border-radius:2px;border:1px solid var(--line);color:var(--muted);white-space:nowrap;text-transform:uppercase}
+.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px 12px}
+.fields label{display:block;font-size:12.5px;color:var(--muted);line-height:1.35}
+.fields label>input,.fields label>select,.fields label>.mono{display:block;margin-top:4px}
+.wide{grid-column:1/-1}
+canvas.plain{width:100%;display:block;border-radius:4px;background:var(--screen)}
+.cv-sq{height:300px}.cv-pl{height:220px}
+
+/* tables */
+.tbl{overflow-x:auto;margin:14px 0;border:1px solid var(--line);border-radius:4px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{font:600 11.5px var(--f-mono);letter-spacing:.05em;color:var(--muted);background:var(--bezel);white-space:nowrap;text-transform:uppercase}
+td.n{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+table input{width:84px}
+tr.sel td{background:color-mix(in srgb,var(--copper) 10%,transparent)}
+
+/* chip map */
+.chipwrap{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:14px;align-items:start;margin:18px 0}
+@media (max-width:900px){.chipwrap{grid-template-columns:minmax(0,1fr)}}
+.chipsvg{background:var(--screen);border:1px solid var(--line);border-radius:6px;padding:8px;overflow:hidden}
+.chipsvg svg{display:block;width:100%;height:auto}
+.ce{cursor:pointer}
+.ce .hit{stroke:transparent;stroke-width:16;fill:none}
+.ce:hover .vis,.ce.sel .vis{stroke:var(--t1)!important}
+.ce:hover .vfill,.ce.sel .vfill{fill:color-mix(in srgb,var(--t1) 25%,transparent)!important;stroke:var(--t1)!important}
+.ce:focus{outline:none}
+.ce:focus-visible .vis{stroke:var(--t1)!important}
+.elcard{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:14px;min-height:240px}
+.elcard h4{font:600 22px/1.1 var(--f-display)}
+.elcard .rfl{color:var(--t2);font-size:14px}
+.elcard .typ{font:13px var(--f-mono);color:var(--t1)}
+
+/* svg classes */
+svg .stroke{stroke:var(--fg);fill:none;stroke-width:2}
+svg .thin{stroke:var(--muted);fill:none;stroke-width:1}
+svg .acc{stroke:var(--copper);fill:none;stroke-width:2.2}
+svg .wv{stroke:var(--t2);fill:none;stroke-width:2.2}
+svg .fillacc{fill:var(--copper-soft);stroke:var(--copper);stroke-width:1.5}
+svg .fillwv{fill:#0b2125;stroke:var(--t2);stroke-width:1.5}
+svg .fillsf{fill:var(--panel);stroke:var(--fg);stroke-width:1.5}
+svg .plate{fill:var(--copper-soft);stroke:var(--copper);stroke-width:1.5;cursor:pointer}
+svg .plate:hover,svg .plate.sel{fill:color-mix(in srgb,var(--copper) 35%,transparent)}
+svg text{fill:var(--fg);font-family:var(--f-mono);font-size:12px}
+svg text.m{fill:var(--muted);font-size:11px}
+svg text.a{fill:var(--copper)}
+svg text.w{fill:var(--t2)}
+
+/* simulator */
+.circ{overflow-x:auto;background:var(--screen);border-radius:4px;padding:8px}
+.bars{display:grid;gap:3px;font:12.5px var(--f-mono)}
+.bar{display:grid;grid-template-columns:54px 1fr 130px;gap:8px;align-items:center}
+.bar i{display:block;height:12px;background:var(--t1);border-radius:1px;min-width:1px}
+.bar span:last-child{text-align:right;color:var(--muted);font-variant-numeric:tabular-nums}
+
+/* scale bars */
+.load{display:grid;gap:6px;margin-top:4px}
+.load div{display:grid;grid-template-columns:96px 1fr 120px;gap:10px;align-items:center;font:12.5px var(--f-mono)}
+.load i{display:block;height:10px;border-radius:1px;background:var(--t4)}
+.load i.w{background:var(--warn)}.load i.b{background:var(--bad)}
+.load .trk{background:var(--screen);border:1px solid var(--line);height:12px;border-radius:2px;overflow:hidden}
+.load span:last-child{text-align:right;color:var(--muted)}
+
+/* quiz */
+.prob{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:16px;margin:14px 0}
+.prob h4{font:600 20px/1.15 var(--f-display)}
+.prob .ans{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+.prob .ans input{width:160px}
+.prob .res{margin-top:10px;font-size:14px}
+.prob .res.ok{color:var(--ok)}.prob .res.no{color:var(--warn)}
+.prob details{margin-top:8px;font-size:14px;color:var(--muted)}
+.prob summary{cursor:pointer;color:var(--fg)}
+
+.pager{display:flex;justify-content:space-between;gap:12px;margin-top:32px;flex-wrap:wrap}
+.pager a{font-size:14px;text-decoration:none;border:1px solid var(--line);border-radius:4px;padding:8px 12px;color:var(--fg);background:var(--panel)}
+.pager a:hover{border-color:var(--copper)}
+.note{font-size:13px;color:var(--muted)}
+.refs{display:grid;gap:5px;font-size:13.5px;color:var(--muted);padding-left:26px}
+.refs li::marker{font-family:var(--f-mono);color:var(--copper)}
+.foot{max-width:1320px;margin:0 auto;border-top:1px solid var(--line);padding-block:16px 32px;font-size:12.5px;color:var(--muted);display:flex;flex-wrap:wrap;gap:6px 20px;justify-content:space-between}
+.foot p{max-width:none;margin:0}
+@media (prefers-reduced-motion: reduce){*{scroll-behavior:auto!important}}
+</style>
+
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="#tezgah">
+    <svg viewBox="0 0 40 40" aria-hidden="true"><rect x="1" y="5" width="38" height="30" rx="3" style="fill:#1a1f26;stroke:#2b333d"/><rect x="5" y="9" width="21" height="22" rx="1.5" style="fill:#030507"/><path d="M6 25c3 0 4-11 6.5-11S15 27 17 27s2-6 3.5-6 2 3 4.5 3" style="stroke:#f3d23e;fill:none;stroke-width:1.4"/><circle cx="32" cy="13" r="2.4" style="fill:#d4874a"/><circle cx="32" cy="21" r="2.4" style="fill:#2b333d"/><circle cx="32" cy="28" r="1.6" style="fill:#63d36e"/></svg>
+    <span><b><span class="tr">Kuantum Tezgahı</span><span class="en">Quantum Bench</span></b><small><span class="tr">süperiletken qubit'ler, RF ölçüm ekranında</span><span class="en">superconducting qubits on an RF instrument screen</span></small></span>
+  </a>
+  <div class="search" role="search"><input id="q" type="search" autocomplete="off"><div class="qres" id="qres" hidden></div></div>
+  <div class="lang" role="group" aria-label="Dil / Language"><button type="button" data-l="tr">TR</button><button type="button" data-l="en">EN</button></div>
+</header>
+
+<div class="shell">
+<nav class="side" aria-label="Bölümler / Sections"><div class="navwrap" id="nav"></div></nav>
+<main id="main">
+
+<!-- ===================== 01 TEZGAH ===================== -->
+<section id="tezgah" data-g="0" data-no="01" data-title="Tezgah" data-title-en="The bench">
+<div class="hero">
+ <div>
+  <div class="kicker"><span class="tr">Kuantum Tezgahı · sürüm 1.0</span><span class="en">Quantum Bench · version 1.0</span></div>
+  <h1><span class="tr">Kuantum bilgisayar, bir RF tezgahında</span><span class="en">A quantum computer on an RF bench</span></h1>
+  <p class="lede tr">Süperiletken bir qubit'i anlamak için yeni bir dil öğrenmeniz gerekmiyor. Rezonatör, Q, gürültü sıcaklığı, Smith abağı ve frekans planı biliyorsanız yolun yarısındasınız. Bu tezgahta her kuantum kavramını, her gün başında oturduğumuz bir cihazın ekranında gösteriyorum: VNA, spektrum analizörü, osiloskop, gürültü figürü ölçeri.</p>
+  <p class="lede en">You don't need a new language to understand a superconducting qubit. If you know resonators, Q, noise temperature, the Smith chart and frequency planning, you are halfway there. On this bench every quantum concept is shown on the screen of an instrument we sit in front of every day: a VNA, a spectrum analyser, an oscilloscope, a noise-figure meter.</p>
+  <div class="sig"><i></i><b>Doruk Yıldön</b><span class="tr">Ekim 2026</span><span class="en">October 2026</span></div>
+  <dl class="spec">
+   <div><dt>T<sub>MXC</sub></dt><dd>≈10 mK</dd></div>
+   <div><dt>f<sub>01</sub></dt><dd>4–6 GHz</dd></div>
+   <div><dt>hf/k<sub>B</sub>T</dt><dd>≈24</dd></div>
+   <div><dt>Q = ωT<sub>1</sub></dt><dd>~10⁶</dd></div>
+  </dl>
+ </div>
+ <figure class="hero-img">
+  <img src="img/iqm-kriyostat.jpg" width="900" height="1125" alt="IQM dilution refrigerator, gold-plated stages and coaxial wiring">
+  <canvas id="heroBloch" aria-hidden="true"></canvas>
+  <figcaption><span class="tr">IQM kuantum bilgisayarı, Espoo. Altın kaplı kademeler ve aşağı inen koaks hatlar.</span><span class="en">IQM quantum computer, Espoo. Gold-plated stages and the coaxial lines running down.</span> <a href="https://commons.wikimedia.org/wiki/File:IQM_Quantum_Computer_Espoo_Finland.jpg" target="_blank" rel="noopener">Ragsxl</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0" target="_blank" rel="noopener">CC BY-SA 4.0</a></figcaption>
+ </figure>
+</div>
+
+<h3><span class="tr">Tezgahtaki cihazlar</span><span class="en">What's on the bench</span></h3>
+<div class="rack" id="rack"></div>
+
+<div class="prose">
+<p class="tr">Spec satırındaki sayılar tezgahın tamamını özetliyor. Qubit 4–6 GHz'de bir rezonatör. Onu 10 mK'e soğutuyoruz, çünkü 5 GHz'lik bir fotonun enerjisi bu sıcaklıktaki termal enerjinin yaklaşık 24 katı. Kalite faktörü 10⁶ mertebesinde ve bu sayı doğrudan T<sub>1</sub> süresidir. Gerisi bildiğimiz mühendislik: kayıp bütçesi, gürültü bütçesi, ısı bütçesi.</p>
+<p class="en">The numbers on the spec line summarise the whole bench. The qubit is a 4–6 GHz resonator. We cool it to 10 mK because a 5 GHz photon carries about 24 times the thermal energy at that temperature. Its quality factor is around 10⁶, and that number is simply T<sub>1</sub>. The rest is engineering we already know: a loss budget, a noise budget, a heat budget.</p>
+<aside><b><span class="tr">Nasıl okunur</span><span class="en">How to read it</span></b><span class="tr">Bölümler soldan sağa, tezgahta bir ölçüm kurar gibi ilerliyor: önce cihazı (qubit, çip), sonra ölçüm aletlerini, sonra kriyostat ve okuma zincirini. Her cihazın ayarları değiştirilebilir; sonuçlar anında güncellenir.</span><span class="en">Sections run the way you would set up a measurement: first the device (qubit, chip), then the instruments, then the cryostat and the readout chain. Every instrument setting can be changed and results update live.</span></aside>
+</div>
+</section>
+
+<!-- ===================== 02 QUBIT ===================== -->
+<section id="qubit" data-g="0" data-no="02" data-title="Qubit: doğrusal olmayan LC" data-title-en="Qubit: a nonlinear LC" hidden>
+<div class="kicker"><span class="tr">Temel · cihaz</span><span class="en">Fundamentals · device</span></div>
+<h2><span class="tr">Qubit, endüktörü doğrusal olmayan bir LC tankıdır</span><span class="en">A qubit is an LC tank with a nonlinear inductor</span></h2>
+<p class="lede tr">Transmon, şönt kapasitörlü bir paralel rezonatördür. Tek fark endüktörün bir Josephson junction olması. Geri kalan her şey bu farktan çıkıyor.</p>
+<p class="lede en">A transmon is a parallel resonator with a shunt capacitor. The only difference is that its inductor is a Josephson junction. Everything else follows from that.</p>
+
+<figure class="fig">
+  <svg id="levels" viewBox="0 0 720 300" role="img" aria-label="LC / transmon energy levels"></svg>
+  <figcaption><span class="tr">Solda doğrusal LC: parabolik potansiyel, eşit aralıklı seviyeler. Sağda transmon: kosinüs potansiyeli, seviyeler yukarıda sıklaşıyor. E<sub>J</sub>/E<sub>C</sub> = 30 için ölçekli çizildi.</span><span class="en">Left, a linear LC: parabolic potential, equally spaced levels. Right, a transmon: cosine potential, levels crowd together near the top. Drawn to scale for E<sub>J</sub>/E<sub>C</sub> = 30.</span><span class="fn"><a href="#kaynaklar">[2]</a></span></figcaption>
+</figure>
+
+<div class="prose">
+<p class="tr">Kuantum mekaniğinde LC rezonatörün enerjisi <span class="mono">E<sub>n</sub> = ħω(n + ½)</span> değerlerini alır; <i>n</i> içindeki foton sayısıdır. Seviyeler eşit aralıklı olduğu için 0→1, 1→2 ve 2→3 geçişleri aynı frekanstadır. Bu frekansta sürdüğünüzde enerji bütün merdivene yayılır, iki seviyeyi seçip "0" ve "1" diye kullanamazsınız.</p>
+<p class="en">In quantum mechanics an LC resonator has energies <span class="mono">E<sub>n</sub> = ħω(n + ½)</span>, with <i>n</i> photons inside. The levels are equally spaced, so 0→1, 1→2 and 2→3 all sit at the same frequency. Drive it there and energy climbs the whole ladder; you cannot pick out two levels and call them "0" and "1".</p>
+<aside><b>RF ⇄</b><span class="tr">Doğrusal rezonatör harmonik üretmez, IP3'ü sonsuzdur. Qubit için IP3'ü sonlu, yani doğrusal olmayan ama kayıpsız bir eleman gerekiyor.</span><span class="en">A linear resonator makes no harmonics; its IP3 is infinite. A qubit needs an element with finite IP3: nonlinear, yet lossless.</span></aside>
+
+<p class="tr">Josephson junction, iki alüminyum film arasında birkaç nanometrelik bir AlO<sub>x</sub> tünel bariyeridir. Endüktansı içinden geçen akıma bağlıdır:</p>
+<p class="en">A Josephson junction is a tunnel barrier of AlO<sub>x</sub>, a few nanometres thick, between two aluminium films. Its inductance depends on the current through it:</p>
+<div class="eq">I = I<sub>c</sub>·sin φ      V = (Φ<sub>0</sub>/2π)·dφ/dt      Φ<sub>0</sub> = h/2e = 2.0678×10⁻¹⁵ Wb
+L<sub>J</sub> = Φ<sub>0</sub>/(2π·I<sub>c</sub>·cos φ) = L<sub>J0</sub>/√(1 − (I/I<sub>c</sub>)²)</div>
+<aside><b>RF ⇄</b><span class="tr">Akımla ayarlanan bir varaktör gibi düşünün; ama endüktif ve dirençsiz.</span><span class="en">Think of a current-tuned varactor that happens to be inductive and resistance-free.</span></aside>
+</div>
+
+<figure class="photo light">
+ <img src="img/fluxonium-sem.jpg" width="676" height="550" alt="Electron micrograph of a fluxonium loop made of Josephson junctions" loading="lazy">
+ <figcaption><span class="tr">Gerçek junction'lar: bir fluxonium halkasının elektron mikroskobu görüntüsü (ölçek 5 µm). Bir kol, seri bağlı büyük junction'lardan oluşan bir süperendüktör; diğer kol tek bir küçük junction.</span><span class="en">Real junctions: electron micrograph of a fluxonium loop (5 µm scale bar). One arm is a superinductor made of large junctions in series; the other is a single small junction.</span>
+ <span class="credit">Cottet, Xiong, Nguyen et al., Nat. Commun. (2021), <a href="https://doi.org/10.1038/s41467-021-26686-x" target="_blank" rel="noopener">doi:10.1038/s41467-021-26686-x</a> · <a href="https://commons.wikimedia.org/wiki/File:Fluxonium_Qubit.png" target="_blank" rel="noopener">Wikimedia Commons</a>, CC BY-SA 4.0</span></figcaption>
+</figure>
+
+<div class="grid">
+<div class="calc">
+  <header><h4><span class="tr">Junction endüktansı</span><span class="en">Junction inductance</span></h4></header>
+  <div class="fields">
+    <label>I<sub>c</sub> (nA)<input id="ljIc" type="number" value="30" step="any" min="0"></label>
+    <label>I / I<sub>c</sub><input id="ljR" type="number" value="0.5" step="0.05" min="0" max="0.99"></label>
+  </div>
+  <dl class="out" id="oLJ"></dl>
+</div>
+<div class="calc">
+  <header><h4><span class="tr">Transmon frekansı</span><span class="en">Transmon frequency</span></h4><span class="tag">Koch 2007 [2]</span></header>
+  <div class="fields">
+    <label>E<sub>J</sub>/h (GHz)<input id="tEJ" type="number" value="20" step="any" min="0"></label>
+    <label>E<sub>C</sub>/h (GHz)<input id="tEC" type="number" value="0.25" step="any" min="0"></label>
+  </div>
+  <dl class="out" id="oT"></dl>
+  <div class="formula">f<sub>01</sub> ≈ √(8E<sub>J</sub>E<sub>C</sub>) − E<sub>C</sub>;  α ≈ −E<sub>C</sub></div>
+</div>
+<div class="calc">
+  <header><h4><span class="tr">Junction ve kapasitanstan</span><span class="en">From junction and capacitance</span></h4></header>
+  <div class="fields">
+    <label>I<sub>c</sub> (nA)<input id="jIc" type="number" value="30" step="any" min="0"></label>
+    <label>C<sub>Σ</sub> (fF)<input id="jC" type="number" value="80" step="any" min="0"></label>
+  </div>
+  <dl class="out" id="oJ"></dl>
+  <div class="btns"><button class="btn" id="jPush" type="button"><span class="tr">Transmon hesabına aktar</span><span class="en">Send to transmon</span></button></div>
+</div>
+<div class="calc">
+  <header><h4><span class="tr">Termal doluluk</span><span class="en">Thermal occupation</span></h4></header>
+  <div class="fields">
+    <label>f (GHz)<input id="thF" type="number" value="5" step="any" min="0"></label>
+    <label><span class="tr">Sizin T (mK)</span><span class="en">Your T (mK)</span><input id="thT" type="number" value="35" step="any" min="0"></label>
+  </div>
+  <div class="tbl" style="margin:0"><table><thead><tr><th>T</th><th>hf/k<sub>B</sub>T</th><th>n̄<sub>th</sub></th><th>P(|1⟩)</th></tr></thead><tbody id="oTh"></tbody></table></div>
+</div>
+</div>
+
+<h3><span class="tr">Anharmonisite ve Rabi salınımı</span><span class="en">Anharmonicity and Rabi oscillation</span></h3>
+<div class="prose">
+<p class="tr">Transmonda 1→2 geçişi 0→1'den yaklaşık E<sub>C</sub>/h kadar aşağıdadır: α ≈ −200…−300 MHz.<span class="fn"><a href="#kaynaklar">[1]</a></span> Sürüş darbesinin spektrumu |α|'dan dar kaldıkça qubit iki seviyeli bir sistem gibi davranır. Rezonansta sürülen qubit |0⟩ ile |1⟩ arasında gidip gelir; buna Rabi salınımı diyoruz. Darbe alanı π olduğunda durum tam olarak çevrilir.</p>
+<p class="en">In a transmon the 1→2 transition sits about E<sub>C</sub>/h below 0→1: α ≈ −200…−300 MHz.<span class="fn"><a href="#kaynaklar">[1]</a></span> As long as the drive spectrum is narrower than |α|, the qubit behaves as a two-level system. Driven on resonance it swings between |0⟩ and |1⟩, the Rabi oscillation. A pulse of area π flips the state completely.</p>
+<aside><b>RF ⇄</b><span class="tr">Duffing rezonatörü: frekans enerjiyle kayar. Burada kayma foton başına yüzlerce MHz, çizgi genişliği ise kHz mertebesinde.</span><span class="en">A Duffing resonator: frequency shifts with stored energy. Here the shift is hundreds of MHz per photon while the linewidth is kHz.</span></aside>
+</div>
+<div class="inst">
+ <div class="inst-head"><b><span class="tr">Bloch küresi · dönen çerçeve</span><span class="en">Bloch sphere · rotating frame</span></b><span class="st">RUN</span></div>
+ <div class="inst-body">
+  <div>
+   <div class="scr"><canvas id="cvBloch" class="h360" aria-label="Bloch sphere"></canvas></div>
+   <div class="scr"><canvas id="cvRabi" class="h220" aria-label="P1(t)"></canvas><div class="mk" id="mkB"></div></div>
+  </div>
+  <div class="keys">
+   <div class="grp"><b><span class="tr">Sürüş</span><span class="en">Drive</span></b>
+    <label class="sk">Ω<sub>R</sub>/2π (MHz)<input id="bO" type="range" min="1" max="50" step="0.5" value="10"><span class="mono" id="bOv"></span></label>
+    <label class="sk">Δ/2π (MHz)<input id="bD" type="range" min="-40" max="40" step="0.5" value="0"><span class="mono" id="bDv"></span></label>
+    <label class="sk">t (ns)<input id="bT" type="range" min="0" max="200" step="0.5" value="50"><span class="mono" id="bTv"></span></label>
+   </div>
+   <div class="grp"><b><span class="tr">Darbe</span><span class="en">Pulse</span></b>
+    <div class="btns"><button class="btn pri" id="bPlay" type="button"></button><button class="btn" id="bPi" type="button">π</button><button class="btn" id="bPi2" type="button">π/2</button></div>
+   </div>
+  </div>
+ </div>
+</div>
+</section>
+
+<!-- ===================== 03 CHIP ===================== -->
+<section id="cip" data-g="0" data-no="03" data-title="Çip haritası" data-title-en="Chip map" hidden>
+<div class="kicker"><span class="tr">Temel · yerleşim</span><span class="en">Fundamentals · layout</span></div>
+<h2><span class="tr">Çipin %90'ı bildiğiniz mikrodalga devresi</span><span class="en">Ninety percent of the chip is microwave circuitry you know</span></h2>
+<p class="lede tr">Kuantum çipi, silikon ya da safir üzerine Al, Nb veya Ta ile çizilmiş bir mikrodalga devresidir. CPW hatlar, kuplaj kapasitörleri, λ/4 rezonatörler, bant geçiren filtreler. Yeni olan tek eleman Josephson junction.</p>
+<p class="lede en">A quantum chip is a microwave circuit patterned in Al, Nb or Ta on silicon or sapphire: CPW lines, coupling capacitors, λ/4 resonators, bandpass filters. The only new element is the Josephson junction.</p>
+
+<figure class="photo light">
+ <img src="img/eth-4-qubit-cip.jpg" width="500" height="354" alt="Four-qubit superconducting chip with CPW resonators and control lines" loading="lazy">
+ <figcaption><span class="tr">Gerçek bir 7 mm çip: dört transmon (Q1–Q4), dört CPW rezonatör (R1–R4), giriş/çıkış, akı ve sürüş hatları. Toprak düzlemindeki delikler akı vortekslerini sabitliyor.</span><span class="en">A real 7 mm chip: four transmons (Q1–Q4), four CPW resonators (R1–R4), input/output, flux and drive lines. The holes in the ground plane pin flux vortices.</span>
+ <span class="credit">Salathé et al., Phys. Rev. X 5, 021027 (2015) · <a href="https://commons.wikimedia.org/wiki/File:4_Qubit_Chip,_10.1103.PhysRevX.5.021027_(A._Wallraff,_2015).png" target="_blank" rel="noopener">Wikimedia Commons</a>, CC BY-SA 3.0</span></figcaption>
+</figure>
+
+<h3><span class="tr">Haritada bir elemana dokunun</span><span class="en">Tap an element on the map</span></h3>
+<div class="chipwrap">
+ <div class="chipsvg"><svg id="chip" viewBox="0 0 640 400" role="img" aria-label="Interactive two-qubit chip map"></svg></div>
+ <div class="elcard" id="elcard" aria-live="polite"></div>
+</div>
+
+<div class="grid">
+<div class="calc">
+  <header><h4><span class="tr">CPW empedansı</span><span class="en">CPW impedance</span></h4><span class="tag">Simons [5]</span></header>
+  <div class="fields">
+    <label>w (µm)<input id="cW" type="number" value="10" step="any" min="0"></label>
+    <label>s (µm)<input id="cS" type="number" value="6" step="any" min="0"></label>
+    <label>ε<sub>r</sub><input id="cEr" type="number" value="11.45" step="any" min="1"></label>
+  </div>
+  <dl class="out" id="oC"></dl>
+  <div class="formula">Z<sub>0</sub> = (30π/√ε<sub>eff</sub>)·K(k')/K(k), k = w/(w+2s), ε<sub>eff</sub> ≈ (ε<sub>r</sub>+1)/2</div>
+</div>
+<div class="calc">
+  <header><h4><span class="tr">Sürüş portu → T<sub>1</sub> sınırı</span><span class="en">Drive port → T<sub>1</sub> limit</span></h4></header>
+  <div class="fields">
+    <label>C<sub>d</sub> (fF)<input id="xCd" type="number" value="0.05" step="any" min="0"></label>
+    <label>C<sub>Σ</sub> (fF)<input id="xCs" type="number" value="80" step="any" min="0"></label>
+    <label>f<sub>q</sub> (GHz)<input id="xF" type="number" value="5" step="any" min="0"></label>
+    <label>Z<sub>0</sub> (Ω)<input id="xZ" type="number" value="50" step="any" min="0"></label>
+  </div>
+  <dl class="out" id="oX"></dl>
+  <div class="formula">Γ<sub>1</sub> ≈ ω²C<sub>d</sub>²Z<sub>0</sub>/C<sub>Σ</sub></div>
+</div>
+<div class="calc">
+  <header><h4><span class="tr">Paket kutusu TE<sub>101</sub></span><span class="en">Package box TE<sub>101</sub></span></h4></header>
+  <div class="fields">
+    <label>a (mm)<input id="kA" type="number" value="20" step="any" min="0"></label>
+    <label>b (mm)<input id="kB" type="number" value="10" step="any" min="0"></label>
+    <label><span class="tr">Etkin ε<sub>r</sub></span><span class="en">Effective ε<sub>r</sub></span><input id="kE" type="number" value="1" step="any" min="1"></label>
+  </div>
+  <dl class="out" id="oK"></dl>
+  <div class="formula">f<sub>101</sub> = c/(2√ε<sub>r</sub>)·√(a⁻² + b⁻²)</div>
+</div>
+</div>
+</section>
+
+<!-- ===================== 04 VNA ===================== -->
+<section id="vna" data-g="1" data-no="04" data-title="VNA: dispersif okuma" data-title-en="VNA: dispersive readout" hidden>
+<div class="kicker"><span class="tr">Ölçüm · vektör ağ analizörü</span><span class="en">Instrument · vector network analyser</span></div>
+<h2><span class="tr">Qubit'i okumak, bir rezonatörün S21'ine bakmaktır</span><span class="en">Reading a qubit means looking at a resonator's S21</span></h2>
+<div class="prose">
+<p class="lede tr">Qubit doğrudan ölçülmez. Ona kuplajlı okuma rezonatörünün frekansı, qubit'in durumuna göre 2χ kadar kayar. VNA ekranında bu iki Lorentz eğrisi olarak görünür. Okuma tonunu ikisinin arasına koyar, iletilen dalganın faz ve genliğine bakarız.</p>
+<p class="lede en">The qubit is not measured directly. The readout resonator coupled to it shifts by 2χ depending on the qubit state. On a VNA that shows up as two Lorentzians. We park the readout tone between them and look at the phase and amplitude of the transmitted wave.</p>
+<aside><b><span class="tr">Ölçüm düzeni</span><span class="en">Setup</span></b><span class="tr">Besleme hattına asılı (hanger) λ/4 rezonatör, iletimde ölçülüyor: S21 = 1 − (Q<sub>L</sub>/Q<sub>e</sub>)/(1 + 2jQ<sub>L</sub>δ).</span><span class="en">A λ/4 resonator hanging off a feedline, measured in transmission: S21 = 1 − (Q<sub>L</sub>/Q<sub>e</sub>)/(1 + 2jQ<sub>L</sub>δ).</span></aside>
+</div>
+<div class="inst">
+ <div class="inst-head"><b>VNA · S21</b><span class="st">MEAS</span></div>
+ <div class="inst-body">
+  <div>
+   <div class="scr"><canvas id="cvVnaM" aria-label="S21 log magnitude"></canvas></div>
+   <div class="scr"><canvas id="cvVnaP" class="h220" aria-label="S21 phase"></canvas><div class="mk" id="mkV"></div></div>
+  </div>
+  <div class="keys">
+   <div class="grp"><b><span class="tr">Rezonatör</span><span class="en">Resonator</span></b>
+    <label class="sk">f<sub>r</sub> (GHz)<input id="vFr" type="number" value="7.000" step="any"></label>
+    <label class="sk">Q<sub>i</sub><input id="vQi" type="number" value="500000" step="any" min="1"></label>
+    <label class="sk">Q<sub>e</sub><input id="vQe" type="number" value="10000" step="any" min="1"></label>
+    <label class="sk">χ/2π (MHz)<input id="vChi" type="number" value="-0.35" step="any"></label>
+   </div>
+   <div class="grp"><b><span class="tr">Uyarım</span><span class="en">Stimulus</span></b>
+    <label class="sk"><span class="tr">Span (MHz)</span><span class="en">Span (MHz)</span><input id="vSpan" type="number" value="4" step="any" min="0.05"></label>
+    <label class="sk"><span class="tr">Okuma tonu ofseti (MHz)</span><span class="en">Readout tone offset (MHz)</span><input id="vRo" type="range" min="-1.5" max="1.5" step="0.01" value="0"><span class="mono" id="vRoV"></span></label>
+   </div>
+   <div class="grp"><b>Touchstone</b><div class="btns"><button class="btn" id="vTs" type="button"><span class="tr">.s2p kopyala</span><span class="en">Copy .s2p</span></button></div><span class="sk" id="vTsMsg"></span></div>
+  </div>
+ </div>
+</div>
+<dl class="out" id="oV"></dl>
+
+<h3><span class="tr">Rezonatörü ve kuplajı boyutlamak</span><span class="en">Sizing the resonator and coupling</span></h3>
+<div class="grid">
+<div class="calc">
+  <header><h4><span class="tr">λ/4 CPW rezonatör</span><span class="en">λ/4 CPW resonator</span></h4></header>
+  <div class="fields">
+    <label>f<sub>r</sub> (GHz)<input id="rF" type="number" value="7" step="any" min="0"></label>
+    <label>ε<sub>r</sub><input id="rEr" type="number" value="11.45" step="any" min="1"></label>
+    <label>Q<sub>i</sub><input id="rQi" type="number" value="500000" step="any" min="1"></label>
+    <label>Q<sub>e</sub><input id="rQe" type="number" value="10000" step="any" min="1"></label>
+  </div>
+  <dl class="out" id="oR"></dl>
+  <div class="src"><span class="tr">Si için ε<sub>r</sub> ≈ 11.45 kriyojenik değer kabul edildi<span class="dag">†</span>.</span><span class="en">ε<sub>r</sub> ≈ 11.45 is taken as the cryogenic value for Si<span class="dag">†</span>.</span></div>
+</div>
+<div class="calc">
+  <header><h4><span class="tr">Dispersif kayma ve Purcell</span><span class="en">Dispersive shift and Purcell</span></h4><span class="tag">[1][2]</span></header>
+  <div class="fields">
+    <label>f<sub>q</sub> (GHz)<input id="dFq" type="number" value="5" step="any"></label>
+    <label>f<sub>r</sub> (GHz)<input id="dFr" type="number" value="7" step="any"></label>
+    <label>α/2π (MHz)<input id="dA" type="number" value="-250" step="any"></label>
+    <label>g/2π (MHz)<input id="dG" type="number" value="100" step="any" min="0"></label>
+  </div>
+  <dl class="out" id="oD"></dl>
+  <div class="btns"><button class="btn" id="dPush" type="button"><span class="tr">χ'yi VNA'ya aktar</span><span class="en">Send χ to VNA</span></button></div>
+  <div class="formula">χ = (g²/Δ)·α/(Δ+α);  T<sub>1,P</sub> ≈ (Δ/g)²/κ;  n<sub>crit</sub> = Δ²/4g²</div>
+</div>
+</div>
+</section>
+
+<!-- ===================== 05 SMITH ===================== -->
+<section id="smith" data-g="1" data-no="05" data-title="Smith abağı: kuplaj" data-title-en="Smith chart: coupling" hidden>
+<div class="kicker"><span class="tr">Ölçüm · yansıma</span><span class="en">Instrument · reflection</span></div>
+<h2><span class="tr">Q<sub>i</sub> ve Q<sub>e</sub>'yi Smith abağında ayırmak</span><span class="en">Separating Q<sub>i</sub> and Q<sub>e</sub> on the Smith chart</span></h2>
+<div class="prose">
+<p class="lede tr">Yansımada ölçülen bir rezonatör, Smith abağında bir çember çizer. Çemberin çapı kuplajı söyler: Q<sub>e</sub> &lt; Q<sub>i</sub> ise çember merkezi içine alır (aşırı kuplaj), Q<sub>e</sub> = Q<sub>i</sub> ise merkezden geçer (kritik), Q<sub>e</sub> &gt; Q<sub>i</sub> ise küçük kalır. Laboratuvarda gürültülü veriye çember uydurup iki Q'yu ayırırız.</p>
+<p class="lede en">A resonator measured in reflection traces a circle on the Smith chart. Its diameter tells you the coupling: with Q<sub>e</sub> &lt; Q<sub>i</sub> the circle encloses the centre (overcoupled), with Q<sub>e</sub> = Q<sub>i</sub> it passes through it (critical), with Q<sub>e</sub> &gt; Q<sub>i</sub> it stays small. In the lab we fit a circle to noisy data and pull the two Qs apart.</p>
+<aside><b><span class="tr">Uydurma</span><span class="en">Fit</span></b><span class="tr">Önce cebirsel çember uydurma, sonra merkez etrafındaki açıdan Q<sub>L</sub> ve f<sub>r</sub>. Probst ve diğerlerinin yönteminin sadeleştirilmiş hali.</span><span class="en">An algebraic circle fit, then Q<sub>L</sub> and f<sub>r</sub> from the angle around the centre. A simplified version of the method by Probst et al.</span><span class="fn"><a href="#kaynaklar">[14]</a></span></aside>
+</div>
+<div class="inst">
+ <div class="inst-head"><b>VNA · S11 · Smith</b><span class="st">MEAS</span></div>
+ <div class="inst-body">
+  <div class="scr"><canvas id="cvSmith" class="sq" aria-label="Smith chart"></canvas><div class="mk" id="mkS"></div></div>
+  <div class="keys">
+   <div class="grp"><b><span class="tr">Gerçek değerler</span><span class="en">True values</span></b>
+    <label class="sk">Q<sub>i</sub><input id="sQi" type="number" value="200000" step="any" min="1"></label>
+    <label class="sk">Q<sub>e</sub><input id="sQe" type="number" value="50000" step="any" min="1"></label>
+    <div class="btns" style="margin-top:8px"><button class="btn" data-cpl="under" type="button"><span class="tr">Az</span><span class="en">Under</span></button><button class="btn" data-cpl="crit" type="button"><span class="tr">Kritik</span><span class="en">Critical</span></button><button class="btn" data-cpl="over" type="button"><span class="tr">Aşırı</span><span class="en">Over</span></button></div>
+   </div>
+   <div class="grp"><b><span class="tr">Ölçüm</span><span class="en">Measurement</span></b>
+    <label class="sk"><span class="tr">Gürültü σ (doğrusal)</span><span class="en">Noise σ (linear)</span><input id="sN" type="range" min="0" max="0.08" step="0.002" value="0.02"><span class="mono" id="sNv"></span></label>
+    <label class="sk"><span class="tr">Nokta sayısı</span><span class="en">Points</span><input id="sP" type="number" value="201" step="1" min="21" max="2001"></label>
+    <div class="btns" style="margin-top:8px"><button class="btn" id="sNew" type="button"><span class="tr">Yeni tarama</span><span class="en">New sweep</span></button></div>
+   </div>
+  </div>
+ </div>
+</div>
+<div class="tbl"><table><thead id="smH"></thead><tbody id="smT"></tbody></table></div>
+</section>
+
+<!-- ===================== 06 SPECTROSCOPY ===================== -->
+<section id="spektroskopi" data-g="1" data-no="06" data-title="Punch-out ve spektroskopi" data-title-en="Punch-out and spectroscopy" hidden>
+<div class="kicker"><span class="tr">Ölçüm · ilk soğutma günü</span><span class="en">Instrument · first cooldown day</span></div>
+<h2><span class="tr">Yeni bir çip soğuduğunda ilk iki ölçüm</span><span class="en">The first two measurements on a freshly cooled chip</span></h2>
+<div class="prose">
+<p class="lede tr">Önce okuma rezonatörünü güce karşı tararız (punch-out). Düşük güçte rezonatör, qubit'in itmesiyle kaymış frekanstadır. Güç arttıkça qubit doyar ve rezonatör "çıplak" frekansına atlar. Bu atlama qubit'in orada olduğunu kanıtlar. Ardından ikinci bir tonla qubit frekansını ararız (iki tonlu spektroskopi).</p>
+<p class="lede en">First we sweep the readout resonator against power (punch-out). At low power the resonator sits at a frequency pushed by the qubit. As power rises the qubit saturates and the resonator jumps to its "bare" frequency. That jump proves the qubit is there. Then we look for the qubit with a second tone (two-tone spectroscopy).</p>
+<aside><b><span class="tr">Model notu</span><span class="en">Model note</span></b><span class="tr">Punch-out haritası fenomenolojik bir modeldir: düşük güçteki kayma −g²/Δ, geçiş ~10·n<sub>crit</sub> fotonda. Gerçek davranış Jaynes–Cummings doğrusalsızlığıyla belirlenir.</span><span class="en">The punch-out map is a phenomenological model: low-power shift −g²/Δ, transition around ~10·n<sub>crit</sub> photons. Real behaviour follows the Jaynes–Cummings nonlinearity.</span><span class="fn"><a href="#kaynaklar">[20]</a></span></aside>
+</div>
+<div class="inst">
+ <div class="inst-head"><b>VNA · |S21| vs P<sub>in</sub></b><span class="st">SWEEP</span></div>
+ <div class="inst-body">
+  <div class="scr"><canvas id="cvPunch" class="h360" aria-label="Punch-out map"></canvas><div class="mk" id="mkPo"></div></div>
+  <div class="keys">
+   <div class="grp"><b><span class="tr">Cihaz</span><span class="en">Device</span></b>
+    <label class="sk"><span class="tr">f<sub>r</sub> çıplak (GHz)</span><span class="en">bare f<sub>r</sub> (GHz)</span><input id="poFr" type="number" value="7.000" step="any"></label>
+    <label class="sk">f<sub>q</sub> (GHz)<input id="poFq" type="number" value="5.0" step="any"></label>
+    <label class="sk">g/2π (MHz)<input id="poG" type="number" value="100" step="any" min="0"></label>
+    <label class="sk">Q<sub>e</sub><input id="poQe" type="number" value="10000" step="any" min="1"></label>
+   </div>
+  </div>
+ </div>
+</div>
+<div class="inst">
+ <div class="inst-head"><b><span class="tr">İki tonlu spektroskopi</span><span class="en">Two-tone spectroscopy</span></b><span class="st">SWEEP</span></div>
+ <div class="inst-body">
+  <div class="scr"><canvas id="cvSpec" aria-label="Qubit spectroscopy"></canvas><div class="mk" id="mkSp"></div></div>
+  <div class="keys">
+   <div class="grp"><b>Qubit</b>
+    <label class="sk">T<sub>1</sub> (µs)<input id="spT1" type="number" value="40" step="any" min="0"></label>
+    <label class="sk">T<sub>2</sub> (µs)<input id="spT2" type="number" value="30" step="any" min="0"></label>
+   </div>
+   <div class="grp"><b><span class="tr">İkinci ton</span><span class="en">Second tone</span></b>
+    <label class="sk">Ω/2π (MHz)<input id="spO" type="range" min="0.005" max="2" step="0.005" value="0.1"><span class="mono" id="spOv"></span></label>
+    <label class="sk">Span (MHz)<input id="spSpan" type="number" value="4" step="any" min="0.05"></label>
+   </div>
+  </div>
+ </div>
+</div>
+<p class="formula">P<sub>1</sub>(Δ) = ½·Ω²T<sub>1</sub>T<sub>2</sub>/(1 + Δ²T<sub>2</sub>² + Ω²T<sub>1</sub>T<sub>2</sub>);  FWHM/2π = √(1 + Ω²T<sub>1</sub>T<sub>2</sub>)/(πT<sub>2</sub>)</p>
+</section>
+
+<!-- ===================== 07 SPECTRUM ANALYSER ===================== -->
+<section id="spektrum" data-g="1" data-no="07" data-title="Spektrum analizörü" data-title-en="Spectrum analyser" hidden>
+<div class="kicker"><span class="tr">Ölçüm · frekans planı</span><span class="en">Instrument · frequency plan</span></div>
+<h2><span class="tr">Sürüş hattında neler var?</span><span class="en">What is actually on the drive line?</span></h2>
+<div class="prose">
+<p class="lede tr">Qubit darbesi, bir LO ve IQ mikserle üretilir. Spektrum analizöründe istenen tonun yanında LO sızıntısı ve imaj da görünür. Bunlar qubit'in kendi çizgisine, f<sub>12</sub>'ye ya da komşu qubit'e düşerse istenmeyen bir kapı uygulanmış olur. Frekans planı tamamen bildiğimiz kurallarla yapılır.</p>
+<p class="lede en">A qubit pulse is made with an LO and an IQ mixer. On a spectrum analyser you see LO leakage and the image next to the wanted tone. If either lands on the qubit line, on f<sub>12</sub> or on a neighbouring qubit, an unwanted gate is applied. Frequency planning follows rules we already know.</p>
+<aside><b>RF ⇄</b><span class="tr">0.2 dB / 2° IQ dengesizliği ≈ 35 dBc imaj bastırma verir. Kuantum kapısı için genellikle kalibrasyonla 50–60 dBc'nin üstüne çıkılır<span class="dag">†</span>.</span><span class="en">A 0.2 dB / 2° IQ imbalance gives ≈ 35 dBc image rejection. For quantum gates calibration usually pushes that beyond 50–60 dBc<span class="dag">†</span>.</span></aside>
+</div>
+<div class="inst">
+ <div class="inst-head"><b><span class="tr">Spektrum analizörü</span><span class="en">Spectrum analyser</span></b><span class="st">SWEEP</span></div>
+ <div class="inst-body">
+  <div class="scr"><canvas id="cvSa" class="h360" aria-label="Spectrum analyser"></canvas><div class="mk" id="mkSa"></div></div>
+  <div class="keys">
+   <div class="grp"><b><span class="tr">Qubit</span><span class="en">Qubit</span></b>
+    <label class="sk">f<sub>01</sub> (GHz)<input id="saFq" type="number" value="5.0" step="any"></label>
+    <label class="sk">α/2π (MHz)<input id="saA" type="number" value="-250" step="any"></label>
+   </div>
+   <div class="grp"><b><span class="tr">Kaynak</span><span class="en">Source</span></b>
+    <label class="sk">IF (MHz)<input id="saIF" type="number" value="100" step="any"></label>
+    <label class="sk"><span class="tr">Yan bant</span><span class="en">Sideband</span><select id="saSB"><option value="1">USB · RF = LO + IF</option><option value="-1">LSB · RF = LO − IF</option></select></label>
+    <label class="sk">P<sub>out</sub> (dBm)<input id="saP" type="number" value="-20" step="any"></label>
+    <label class="sk"><span class="tr">LO bastırma (dBc)</span><span class="en">LO suppression (dBc)</span><input id="saLO" type="number" value="35" step="any"></label>
+    <label class="sk"><span class="tr">IQ genlik hatası (dB)</span><span class="en">IQ gain error (dB)</span><input id="saG" type="number" value="0.2" step="any"></label>
+    <label class="sk"><span class="tr">IQ faz hatası (°)</span><span class="en">IQ phase error (°)</span><input id="saPh" type="number" value="2" step="any"></label>
+   </div>
+   <div class="grp"><b><span class="tr">Analizör</span><span class="en">Analyser</span></b>
+    <label class="sk">RBW (kHz)<input id="saRbw" type="number" value="100" step="any" min="0.1"></label>
+   </div>
+  </div>
+ </div>
+</div>
+<dl class="out" id="oSa"></dl>
+</section>
+
+<!-- ===================== 08 SCOPE ===================== -->
+<section id="osiloskop" data-g="1" data-no="08" data-title="Osiloskop: DRAG darbesi" data-title-en="Oscilloscope: DRAG pulse" hidden>
+<div class="kicker"><span class="tr">Ölçüm · zaman alanı</span><span class="en">Instrument · time domain</span></div>
+<h2><span class="tr">20 nanosaniyelik bir kapının dalga şekli</span><span class="en">The waveform of a 20-nanosecond gate</span></h2>
+<div class="prose">
+<p class="lede tr">Tek qubit kapısı, Gauss zarflı kısa bir mikrodalga darbesidir. Darbe kısaldıkça spektrumu genişler ve f<sub>12</sub>'deki geçişi de uyarmaya başlar. DRAG, Q kanalına zarfın türevini ekleyerek bu sızıntıyı bastırır. Osiloskopta I ve Q zarflarını ve IF'e modüle edilmiş çıkışı görüyoruz.</p>
+<p class="lede en">A single-qubit gate is a short microwave pulse with a Gaussian envelope. The shorter the pulse, the wider its spectrum, until it starts driving the f<sub>12</sub> transition as well. DRAG suppresses that leakage by adding the envelope's derivative on the Q channel. On the scope we see the I and Q envelopes and the output modulated to IF.</p>
+<aside><b><span class="tr">β seçimi</span><span class="en">Choosing β</span></b><span class="tr">Birinci dereceden sızıntı β = 1'de sıfırlanır; faz hatası için β ≈ 0.5 yaygındır. Pratikte β kalibrasyonla bulunur.</span><span class="en">First-order leakage vanishes at β = 1; β ≈ 0.5 is common for phase error. In practice β is calibrated.</span><span class="fn"><a href="#kaynaklar">[7][21]</a></span></aside>
+</div>
+<div class="inst">
+ <div class="inst-head"><b><span class="tr">Osiloskop · 4 kanal</span><span class="en">Oscilloscope · 4 channels</span></b><span class="st">RUN</span></div>
+ <div class="inst-body">
+  <div class="scr"><canvas id="cvScope" class="h360" aria-label="Oscilloscope"></canvas><div class="mk" id="mkSc"></div></div>
+  <div class="keys">
+   <div class="grp"><b><span class="tr">Darbe</span><span class="en">Pulse</span></b>
+    <label class="sk">t<sub>g</sub> (ns)<input id="gT" type="number" value="20" step="any" min="1"></label>
+    <label class="sk">σ = t<sub>g</sub>/k, k<input id="gK" type="number" value="4" step="any" min="1"></label>
+    <label class="sk">β (DRAG)<input id="gB" type="range" min="-1" max="2" step="0.05" value="0.5"><span class="mono" id="gBv"></span></label>
+   </div>
+   <div class="grp"><b>Qubit / IF</b>
+    <label class="sk">α/2π (MHz)<input id="gA" type="number" value="-250" step="any"></label>
+    <label class="sk">IF (MHz)<input id="gIF" type="number" value="100" step="any"></label>
+   </div>
+  </div>
+ </div>
+</div>
+<dl class="out" id="oG"></dl>
+</section>
+
+<!-- ===================== 09 CRYOSTAT ===================== -->
+<section id="kriyostat" data-g="2" data-no="09" data-title="Kriyostat" data-title-en="Cryostat" hidden>
+<div class="kicker"><span class="tr">Sistem · dilution refrigerator</span><span class="en">System · dilution refrigerator</span></div>
+<h2><span class="tr">Kriyostat bir link bütçesidir</span><span class="en">A cryostat is a link budget</span></h2>
+<div class="prose">
+<p class="lede tr">Dilution refrigerator, her kademesi farklı sıcaklıkta ve farklı soğutma gücünde olan bir kaskaddır. Sürüş hattındaki zayıflatıcılar oda sıcaklığının termal gürültüsünü kademe kademe söndürür. Ama her dB zayıflatma, bulunduğu kademede ısıya dönüşür.</p>
+<p class="lede en">A dilution refrigerator is a cascade whose stages each have their own temperature and cooling power. Attenuators on the drive line knock down room-temperature noise stage by stage. But every dB of attenuation becomes heat on the stage where it sits.</p>
+<aside><b>RF ⇄</b><span class="tr">Kayıplı hattın gürültü formülü, sıcaklık yerine foton sayısıyla yazılmış hali. Düşük sıcaklıkta kT ≈ hf olduğu için Rayleigh–Jeans yaklaşımı geçersiz.</span><span class="en">The lossy-line noise formula, written in photon numbers instead of temperature. At low temperature kT ≈ hf and Rayleigh–Jeans fails.</span></aside>
+</div>
+<div class="photos">
+ <figure class="photo">
+  <img src="img/ibm-system-one.jpg" width="800" height="1062" alt="IBM Quantum System One cryostat with gold-plated stages" loading="lazy">
+  <figcaption><span class="tr">IBM Quantum System One. Yukarıdan aşağı: 50 K, 4 K, still, cold plate, MXC.</span><span class="en">IBM Quantum System One. Top to bottom: 50 K, 4 K, still, cold plate, MXC.</span>
+  <span class="credit">Onri Jay Benally · <a href="https://commons.wikimedia.org/wiki/File:IBM_Quantum_System_One.jpg" target="_blank" rel="noopener">Wikimedia Commons</a>, CC BY 4.0</span></figcaption>
+ </figure>
+ <figure class="photo">
+  <img src="img/alice-bob-kriyostat.jpg" width="800" height="1152" alt="Open dilution refrigerator with coaxial wiring" loading="lazy">
+  <figcaption><span class="tr">Açık bir kriyostat: kademeler arası koaks hatlar ve zayıflatıcılar. Aşağıdaki bütçe bu kabloları hesaplıyor.</span><span class="en">An open cryostat: coaxial lines and attenuators between stages. The budget below models these cables.</span>
+  <span class="credit">Nilhope, Alice &amp; Bob · <a href="https://commons.wikimedia.org/wiki/File:Alice_and_Bob_Cryostat.jpg" target="_blank" rel="noopener">Wikimedia Commons</a>, CC BY-SA 4.0</span></figcaption>
+ </figure>
+</div>
+<div class="chipwrap">
+ <div class="chipsvg"><svg id="cryo" viewBox="0 -18 600 658" role="img" aria-label="Interactive cryostat cross-section"></svg></div>
+ <div class="elcard" id="stcard" aria-live="polite"></div>
+</div>
+<div class="calc">
+  <header><h4><span class="tr">Sürüş hattı: gürültü ve ısı</span><span class="en">Drive line: noise and heat</span></h4><span class="tag"><span class="tr">ideal termalizasyon</span><span class="en">ideal thermalisation</span></span></header>
+  <div class="fields">
+    <label>f (GHz)<input id="aF" type="number" value="5" step="any" min="0"></label>
+    <label><span class="tr">300 K'de sürüş gücü (dBm)</span><span class="en">Drive power at 300 K (dBm)</span><input id="aP" type="number" value="-10" step="any"></label>
+  </div>
+  <div class="tbl" style="margin:0"><table><thead id="attH"></thead><tbody id="attT"></tbody></table></div>
+  <dl class="out" id="oA"></dl>
+  <div class="src"><span class="dag">†</span> <span class="tr">Soğutma güçleri mertebe olarak verildi; modele göre değişir.</span><span class="en">Cooling powers are orders of magnitude and vary by model.</span><span class="fn"><a href="#kaynaklar">[6]</a></span></div>
+</div>
+</section>
+
+<!-- ===================== 10 READOUT CHAIN ===================== -->
+<section id="okuma" data-g="2" data-no="10" data-title="Okuma zinciri" data-title-en="Readout chain" hidden>
+<div class="kicker"><span class="tr">Sistem · gürültü figürü</span><span class="en">System · noise figure</span></div>
+<h2><span class="tr">Birkaç fotonluk sinyal için alıcı tasarımı</span><span class="en">Designing a receiver for a few photons</span></h2>
+<div class="prose">
+<p class="lede tr">Okuma çıkışı, alıcı tasarımının en uç örneği. İlk kat bir Josephson parametrik yükselteç (TWPA), ikinci kat 4 K'de bir HEMT. Friis denklemi burada da aynen geçerli. Tek fark, referansın 290 K değil kuantum sınırı hf/2k<sub>B</sub> olması.</p>
+<p class="lede en">The readout output is receiver design taken to the limit. The first stage is a Josephson parametric amplifier (TWPA), the second a HEMT at 4 K. The Friis equation holds as usual. The difference is the reference: not 290 K but the quantum limit hf/2k<sub>B</sub>.</p>
+<aside><b>RF ⇄</b><span class="tr">Faz koruyan ideal bir yükselteç en az yarım foton gürültü ekler (Caves). Bu yüzden η en iyi durumda 0.5'tir.</span><span class="en">An ideal phase-preserving amplifier adds at least half a photon of noise (Caves), so η is at most 0.5.</span><span class="fn"><a href="#kaynaklar">[9]</a></span></aside>
+</div>
+<div class="calc">
+  <header><h4><span class="tr">Kaskad bütçe</span><span class="en">Cascade budget</span></h4><span class="tag">Friis</span></header>
+  <div class="fields">
+    <label>f<sub>r</sub> (GHz)<input id="nF" type="number" value="7" step="any" min="0"></label>
+    <label class="sk chk" style="padding-top:18px"><input id="nTw" type="checkbox" checked><span class="tr">TWPA takılı</span><span class="en">TWPA fitted</span></label>
+  </div>
+  <div class="tbl" style="margin:0"><table><thead id="rdH"></thead><tbody id="rdT"></tbody></table></div>
+  <dl class="out" id="oN"></dl>
+  <div class="src"><span class="dag">†</span> <span class="tr">TWPA, HEMT ve LNA gürültü sıcaklıkları örnek değerlerdir; kendi datasheet değerlerinizi girin.</span><span class="en">TWPA, HEMT and LNA noise temperatures are example values; enter your own datasheet numbers.</span><span class="fn"><a href="#kaynaklar">[8]</a></span></div>
+</div>
+<h3><span class="tr">Sayısallaştırıcıda |0⟩ ve |1⟩</span><span class="en">|0⟩ and |1⟩ on the digitiser</span></h3>
+<div class="inst">
+ <div class="inst-head"><b><span class="tr">Sayısallaştırıcı · IQ</span><span class="en">Digitiser · IQ</span></b><span class="st">ACQ</span></div>
+ <div class="inst-body">
+  <div>
+   <div class="scr"><canvas id="cvIQ" class="h360" aria-label="IQ scatter"></canvas></div>
+   <div class="scr"><canvas id="cvHist" class="h220" aria-label="Histogram"></canvas><div class="mk" id="mkQ"></div></div>
+  </div>
+  <div class="keys">
+   <div class="grp"><b><span class="tr">Okuma</span><span class="en">Readout</span></b>
+    <label class="sk"><span class="tr">Ayrışma d/σ</span><span class="en">Separation d/σ</span><input id="qD" type="range" min="0.5" max="10" step="0.1" value="4"><span class="mono" id="qDv"></span></label>
+    <label class="sk">τ/T<sub>1</sub><input id="qT" type="range" min="0" max="0.3" step="0.005" value="0.02"><span class="mono" id="qTv"></span></label>
+   </div>
+   <p class="sk"><span class="tr">Noktalar sabit tohumlu rastgele örneklerdir, ölçüm değildir.</span><span class="en">Points are fixed-seed random samples, not measurements.</span></p>
+  </div>
+ </div>
+</div>
+</section>
+
+<!-- ===================== 11 MULTIPLEXING ===================== -->
+<section id="coklama" data-g="2" data-no="11" data-title="Çoklanmış okuma" data-title-en="Multiplexed readout" hidden>
+<div class="kicker"><span class="tr">Sistem · frekans çoklama</span><span class="en">System · frequency multiplexing</span></div>
+<h2><span class="tr">Tek besleme hattında sekiz qubit okumak</span><span class="en">Reading eight qubits on one feedline</span></h2>
+<div class="prose">
+<p class="lede tr">Her qubit'e ayrı bir okuma hattı çekmek ölçeklenmez. Bunun yerine farklı frekanslardaki rezonatörler aynı besleme hattına asılır ve tek bir LO ile, farklı IF'lerde birlikte okunur. Bu bir FDM alıcısıdır: kanal aralığı, komşu kanal bastırması ve ADC bant genişliği arasında bir ödünleşim yapılır.</p>
+<p class="lede en">Running a separate readout line to every qubit does not scale. Instead resonators at different frequencies hang off one feedline and are read together with a single LO at different IFs. It is an FDM receiver: a trade-off between channel spacing, adjacent-channel rejection and ADC bandwidth.</p>
+<aside><b><span class="tr">Gerçek örnek</span><span class="en">Real example</span></b><span class="tr">ETH Zürih ekibi frekans çoklamalı okumayla birden fazla qubit'i aynı anda yüksek sadakatle okudu.</span><span class="en">The ETH Zurich group read several qubits simultaneously with high fidelity using frequency-multiplexed readout.</span><span class="fn"><a href="#kaynaklar">[19]</a></span></aside>
+</div>
+<div class="inst">
+ <div class="inst-head"><b>VNA · S21 · <span class="tr">besleme hattı</span><span class="en">feedline</span></b><span class="st">MEAS</span></div>
+ <div class="inst-body">
+  <div class="scr"><canvas id="cvMux" class="h360" aria-label="Multiplexed S21"></canvas><div class="mk" id="mkMx"></div></div>
+  <div class="keys">
+   <div class="grp"><b><span class="tr">Rezonatörler</span><span class="en">Resonators</span></b>
+    <label class="sk"><span class="tr">Sayı N</span><span class="en">Count N</span><input id="mxN" type="number" value="8" step="1" min="1" max="16"></label>
+    <label class="sk"><span class="tr">İlk f<sub>r</sub> (GHz)</span><span class="en">First f<sub>r</sub> (GHz)</span><input id="mxF" type="number" value="7.0" step="any"></label>
+    <label class="sk"><span class="tr">Aralık (MHz)</span><span class="en">Spacing (MHz)</span><input id="mxS" type="number" value="40" step="any" min="0.1"></label>
+    <label class="sk">Q<sub>e</sub><input id="mxQe" type="number" value="5000" step="any" min="1"></label>
+    <label class="sk">Q<sub>i</sub><input id="mxQi" type="number" value="300000" step="any" min="1"></label>
+   </div>
+   <div class="grp"><b><span class="tr">Sayısallaştırıcı</span><span class="en">Digitiser</span></b>
+    <label class="sk"><span class="tr">ADC bant genişliği ± (MHz)</span><span class="en">ADC bandwidth ± (MHz)</span><input id="mxBw" type="number" value="250" step="any" min="1"></label>
+   </div>
+  </div>
+ </div>
+</div>
+<dl class="out" id="oMx"></dl>
+</section>
+
+<!-- ===================== 12 DECOHERENCE ===================== -->
+<section id="uyumsuzluk" data-g="3" data-no="12" data-title="Uyumsuzluk = kayıp" data-title-en="Decoherence = loss" hidden>
+<div class="kicker"><span class="tr">Kuantum · T₁, T₂</span><span class="en">Quantum · T₁, T₂</span></div>
+<h2><span class="tr">T<sub>1</sub> Q faktörüdür, T<sub>2</sub> faz gürültüsüdür</span><span class="en">T<sub>1</sub> is a Q factor, T<sub>2</sub> is phase noise</span></h2>
+<div class="prose">
+<p class="lede tr">Kuantum literatüründeki "uyumsuzluk" kelimesinin arkasında iki tanıdık kavram var. T<sub>1</sub> enerji kaybıdır ve doğrudan rezonatörün Q'sudur: Q = 2πf·T<sub>1</sub>. T<sub>2</sub> faz kaybıdır, yani osilatörün faz gürültüsü. Her kayıp kanalı ayrı bir Γ olarak toplanır, tıpkı 1/Q<sub>L</sub> = Σ 1/Q<sub>i</sub> gibi.</p>
+<p class="lede en">Behind the word "decoherence" are two familiar ideas. T<sub>1</sub> is energy loss, simply the resonator Q: Q = 2πf·T<sub>1</sub>. T<sub>2</sub> is phase loss, the oscillator's phase noise. Each loss channel adds as its own Γ, just like 1/Q<sub>L</sub> = Σ 1/Q<sub>i</sub>.</p>
+<aside><b>RF ⇄</b><span class="tr">Hahn echo ortadaki bir π darbesiyle yavaş frekans kaymasını geri sarar. Bir PLL'in yakın faz gürültüsünü bastırmasına benzer.</span><span class="en">A Hahn echo rewinds slow frequency drift with a π pulse in the middle, much like a PLL suppressing close-in phase noise.</span></aside>
+</div>
+<div class="grid">
+<div class="calc">
+  <header><h4>T<sub>1</sub> ↔ Q</h4></header>
+  <div class="fields">
+    <label>f<sub>q</sub> (GHz)<input id="uF" type="number" value="5" step="any" min="0"></label>
+    <label>T<sub>1</sub> (µs)<input id="uT1" type="number" value="100" step="any" min="0"></label>
+    <label>T<sub>φ</sub> (µs)<input id="uTp" type="number" value="150" step="any" min="0"></label>
+  </div>
+  <dl class="out" id="oU"></dl>
+</div>
+<div class="calc">
+  <header><h4><span class="tr">Termal fotonlardan dephasing</span><span class="en">Dephasing from thermal photons</span></h4><span class="tag">[10]</span></header>
+  <div class="fields">
+    <label>χ/2π (MHz)<input id="wC" type="number" value="0.5" step="any" min="0"></label>
+    <label>κ/2π (MHz)<input id="wK" type="number" value="1" step="any" min="0"></label>
+    <label>n̄<sub>th</sub><input id="wN" type="number" value="0.002" step="any" min="0"></label>
+  </div>
+  <dl class="out" id="oW"></dl>
+  <div class="formula">Γ<sub>φ</sub> ≈ 4χ²κ·n̄/(κ² + 4χ²)</div>
+</div>
+</div>
+<div class="inst">
+ <div class="inst-head"><b>Ramsey · Hahn echo</b><span class="st">AVG 1000</span></div>
+ <div class="inst-body">
+  <div class="scr"><canvas id="cvRam" aria-label="Ramsey and echo"></canvas><div class="mk" id="mkRm"></div></div>
+  <div class="keys"><div class="grp"><b><span class="tr">Model</span><span class="en">Model</span></b>
+    <label class="sk">T<sub>2</sub>* (µs)<input id="rmT2s" type="number" value="40" step="any" min="0"></label>
+    <label class="sk">T<sub>2E</sub> (µs)<input id="rmT2e" type="number" value="120" step="any" min="0"></label>
+    <label class="sk">δ (MHz)<input id="rmD" type="number" value="0.1" step="any"></label>
+    <label class="sk"><span class="tr">Süre (µs)</span><span class="en">Span (µs)</span><input id="rmX" type="number" value="150" step="any" min="1"></label>
+  </div></div>
+ </div>
+</div>
+<div class="tbl"><table><thead id="noiseH"></thead><tbody id="noiseT"></tbody></table></div>
+</section>
+
+<!-- ===================== 13 GATES ===================== -->
+<section id="kapilar" data-g="3" data-no="13" data-title="Kapılar ve devreler" data-title-en="Gates and circuits" hidden>
+<div class="kicker"><span class="tr">Kuantum · kapılar</span><span class="en">Quantum · gates</span></div>
+<h2><span class="tr">Devre şemasındaki her kutu bir darbedir</span><span class="en">Every box in a circuit diagram is a pulse</span></h2>
+<div class="prose">
+<p class="lede tr">Kuantum devresindeki X, H, CZ gibi kutular, kriyostata inen kablolardan birinden gönderilen belirli darbelerdir. Dönüş eksenini LO fazı, dönüş açısını darbe alanı belirler. Z kapıları ise hiç darbe gerektirmez: sonraki darbelerin fazı yazılımda kaydırılır.</p>
+<p class="lede en">Boxes such as X, H and CZ in a quantum circuit are specific pulses sent down one of the cables into the cryostat. The LO phase sets the rotation axis and the pulse area sets the angle. Z gates need no pulse at all: the phase of later pulses is shifted in software.</p>
+<aside><b>RF ⇄</b><span class="tr">iSWAP, iki eş frekanslı kuplajlı LC tankı arasında enerjinin bir kez tam aktarılmasıdır; süre π/(2g).</span><span class="en">An iSWAP is one complete energy transfer between two degenerate coupled LC tanks; it takes π/(2g).</span></aside>
+</div>
+<div class="tbl"><table><thead id="gateH"></thead><tbody id="gateT"></tbody></table></div>
+<div class="inst">
+ <div class="inst-head"><b><span class="tr">Durum vektörü simülatörü</span><span class="en">State-vector simulator</span></b><span class="st">IDEAL</span></div>
+ <div class="inst-body full">
+  <div class="keys" style="flex-direction:row;flex-wrap:wrap">
+   <div class="grp" style="flex:1 1 320px"><b><span class="tr">Kapı ekle</span><span class="en">Add gate</span></b>
+    <div class="fields">
+     <label>Qubit<select id="kN"><option value="2">2</option><option value="3" selected>3</option></select></label>
+     <label><span class="tr">Kapı</span><span class="en">Gate</span><select id="kG"><option>H</option><option>X</option><option>Y</option><option>Z</option><option>S</option><option>T</option><option value="SX">√X</option><option>CNOT</option><option>CZ</option></select></label>
+     <label><span class="tr">Hedef</span><span class="en">Target</span><select id="kT"></select></label>
+     <label><span class="tr">Kontrol</span><span class="en">Control</span><select id="kC"></select></label>
+    </div>
+    <div class="btns" style="margin-top:8px">
+     <button class="btn pri" id="kAdd" type="button"><span class="tr">Ekle</span><span class="en">Add</span></button>
+     <button class="btn" id="kUndo" type="button"><span class="tr">Geri al</span><span class="en">Undo</span></button>
+     <button class="btn" id="kClr" type="button"><span class="tr">Temizle</span><span class="en">Clear</span></button>
+     <button class="btn" id="kBell" type="button">Bell</button>
+     <button class="btn" id="kGHZ" type="button">GHZ</button>
+    </div>
+   </div>
+  </div>
+  <div class="circ"><svg id="circ" viewBox="0 0 600 150" role="img" aria-label="Circuit"></svg></div>
+  <div class="grid" style="margin:0">
+   <div class="grp keys"><div class="grp"><b><span class="tr">Ölçüm olasılıkları</span><span class="en">Measurement probabilities</span></b><div class="bars" id="kBars"></div></div></div>
+   <div class="grp keys"><div class="grp"><b><span class="tr">RF tarafında gönderilenler</span><span class="en">What the RF side sends</span></b><ol id="kPulses" class="note" style="margin:0;padding-left:20px"></ol></div></div>
+  </div>
+ </div>
+</div>
+</section>
+
+<!-- ===================== 14 SCALING ===================== -->
+<section id="olcek" data-g="4" data-no="14" data-title="Ölçekleme: kablo ve ısı" data-title-en="Scaling: wires and heat" hidden>
+<div class="kicker"><span class="tr">Ölçek · 1000 qubit</span><span class="en">Scale · 1000 qubits</span></div>
+<h2><span class="tr">Bin qubit'in darboğazı fizik değil, kablo</span><span class="en">At a thousand qubits the bottleneck is wiring, not physics</span></h2>
+<div class="prose">
+<p class="lede tr">Her qubit'e bir sürüş hattı, ayarlanabilir qubit'lerde ek bir akı hattı ve birkaç qubit'e bir okuma hattı gider. Her koaks kablo, ısıl iletimle her kademeye bir miktar ısı taşır. Kademelerin soğutma gücü sabit olduğundan qubit sayısı bir noktada ısı bütçesine takılır. Esnek (flex) kablolar, kriyojenik CMOS ve çoklama bu yüzden aktif araştırma konuları.</p>
+<p class="lede en">Each qubit gets a drive line, tunable qubits get an extra flux line, and a readout line is shared by a few qubits. Every coax carries some heat to each stage by conduction. Since stage cooling powers are fixed, the qubit count eventually hits the heat budget. That is why flex cables, cryogenic CMOS and multiplexing are active research topics.</p>
+<aside><b><span class="tr">RFIC bakışı</span><span class="en">An RFIC view</span></b><span class="tr">Kontrol elektroniğini 4 K'ye indirmek kablo sayısını azaltır, ama 4 K'de birkaç mW/qubit güç bütçesi getirir. Kriyo-CMOS LNA ve DAC tasarımı burada başlar.</span><span class="en">Moving control electronics to 4 K cuts the cable count but imposes a power budget of a few mW per qubit at 4 K. That is where cryo-CMOS LNA and DAC design begins.</span></aside>
+</div>
+<div class="calc">
+  <header><h4><span class="tr">Kablo ve ısı bütçesi</span><span class="en">Wiring and heat budget</span></h4><span class="tag"><span class="tr">el hesabı</span><span class="en">hand estimate</span></span></header>
+  <div class="fields">
+    <label><span class="tr">Qubit sayısı</span><span class="en">Qubit count</span><input id="scN" type="number" value="100" step="1" min="1"></label>
+    <label><span class="tr">Akı hattı / qubit</span><span class="en">Flux lines / qubit</span><input id="scF" type="number" value="1" step="1" min="0"></label>
+    <label><span class="tr">Okuma hattı başına qubit</span><span class="en">Qubits per readout line</span><input id="scM" type="number" value="8" step="1" min="1"></label>
+  </div>
+  <div class="tbl" style="margin:0"><table><thead id="scH"></thead><tbody id="scT"></tbody></table></div>
+  <div class="load" id="scLoad"></div>
+  <dl class="out" id="oSc"></dl>
+  <div class="src"><span class="dag">†</span> <span class="tr">Kablo başına ısı değerleri 0.86 mm paslanmaz/CuNi koaks için ∫k dT ile yaptığım kaba tahminlerdir; Krinner ve diğerlerinin ölçümleriyle karşılaştırın.</span><span class="en">Per-cable heat values are my rough ∫k dT estimates for 0.86 mm stainless/CuNi coax; compare with the measurements of Krinner et al.</span><span class="fn"><a href="#kaynaklar">[6]</a></span></div>
+</div>
+</section>
+
+<!-- ===================== 15 REAL SYSTEMS ===================== -->
+<section id="sistemler" data-g="4" data-no="15" data-title="Gerçek sistemler" data-title-en="Real systems" hidden>
+<div class="kicker"><span class="tr">Ölçek · yayınlanmış veriler</span><span class="en">Scale · published data</span></div>
+<h2><span class="tr">Bugünkü süperiletken işlemciler</span><span class="en">Today's superconducting processors</span></h2>
+<div class="prose">
+<p class="lede tr">Aşağıdaki değerler üreticilerin ve makalelerin yayınladığı sayılardır. Metrikler aynı tanımla verilmiyor: biri ortalama, biri medyan, biri eşzamanlı, biri izole ölçüm. Bu yüzden tablo bir sıralama değil, mertebe karşılaştırmasıdır.</p>
+<p class="lede en">The values below are numbers published by vendors and papers. They are not defined the same way: one is a mean, one a median, one simultaneous, one isolated. The table is a comparison of orders of magnitude, not a ranking.</p>
+<aside><b>RF ⇄</b><span class="tr">%0.3'lük iki qubit hatası, kapı başına yaklaşık −25 dB "hata gücü" demek. Hata düzeltme eşiği %1 civarında.</span><span class="en">A 0.3% two-qubit error is roughly −25 dB of "error power" per gate. The error-correction threshold is around 1%.</span></aside>
+</div>
+<div class="tbl"><table><thead id="sysH"></thead><tbody id="sysT"></tbody></table></div>
+<p class="note"><span class="dag">†</span> <span class="tr">IBM için resmi belgeye ulaşamadım; değer ikincil kaynaktan alındı.</span><span class="en">I could not reach IBM's official document; the value is from a secondary source.</span></p>
+</section>
+
+<!-- ===================== 16 PROBLEMS ===================== -->
+<section id="problemler" data-g="5" data-no="16" data-title="Tasarım problemleri" data-title-en="Design problems" hidden>
+<div class="kicker"><span class="tr">Pratik · kendinizi deneyin</span><span class="en">Practice · try yourself</span></div>
+<h2><span class="tr">Dört tasarım problemi</span><span class="en">Four design problems</span></h2>
+<p class="lede tr">Cevabınızı girin, tezgah kontrol etsin. Çözüm adımları her problemin altında. Hesap makinelerini kullanmak serbest.</p>
+<p class="lede en">Enter your answer and the bench checks it. Worked solutions are under each problem. Using the calculators is allowed.</p>
+<div id="probs"></div>
+</section>
+
+<!-- ===================== 17 REFERENCES ===================== -->
+<section id="kaynaklar" data-g="6" data-no="17" data-title="Sözlük ve kaynaklar" data-title-en="Glossary and references" hidden>
+<div class="kicker"><span class="tr">Ek · referans</span><span class="en">Appendix · reference</span></div>
+<h2><span class="tr">RF ⇄ kuantum sözlüğü</span><span class="en">RF ⇄ quantum glossary</span></h2>
+<div class="tbl"><table><thead id="glosH"></thead><tbody id="glosT"></tbody></table></div>
+<h3><span class="tr">Kaynaklar</span><span class="en">References</span></h3>
+<ol class="refs">
+<li>P. Krantz et al., "A quantum engineer's guide to superconducting qubits," <i>Appl. Phys. Rev.</i> 6, 021318 (2019).</li>
+<li>J. Koch et al., "Charge-insensitive qubit design derived from the Cooper pair box," <i>Phys. Rev. A</i> 76, 042319 (2007).</li>
+<li>A. Blais, A. L. Grimsmo, S. M. Girvin, A. Wallraff, "Circuit quantum electrodynamics," <i>Rev. Mod. Phys.</i> 93, 025005 (2021).</li>
+<li>D. M. Pozar, <i>Microwave Engineering</i>, 4th ed., Wiley (2012).</li>
+<li>R. N. Simons, <i>Coplanar Waveguide Circuits, Components, and Systems</i>, Wiley (2001).</li>
+<li>S. Krinner et al., "Engineering cryogenic setups for 100-qubit scale superconducting circuit systems," <i>EPJ Quantum Technol.</i> 6, 2 (2019).</li>
+<li>F. Motzoi et al., "Simple pulses for elimination of leakage in weakly nonlinear qubits," <i>Phys. Rev. Lett.</i> 103, 110501 (2009).</li>
+<li>C. Macklin et al., "A near–quantum-limited Josephson traveling-wave parametric amplifier," <i>Science</i> 350, 307 (2015).</li>
+<li>C. M. Caves, "Quantum limits on noise in linear amplifiers," <i>Phys. Rev. D</i> 26, 1817 (1982).</li>
+<li>A. A. Clerk, D. W. Utami, "Using a qubit to measure photon-number statistics of a driven thermal oscillator," <i>Phys. Rev. A</i> 75, 042302 (2007).</li>
+<li>A. P. M. Place et al., "New material platform for superconducting transmon qubits with coherence times exceeding 0.3 milliseconds," <i>Nat. Commun.</i> 12, 1779 (2021).</li>
+<li>D. C. Mattis, J. Bardeen, "Theory of the anomalous skin effect in normal and superconducting metals," <i>Phys. Rev.</i> 111, 412 (1958).</li>
+<li>M. Tinkham, <i>Introduction to Superconductivity</i>, 2nd ed., Dover (2004).</li>
+<li>S. Probst et al., "Efficient and robust analysis of complex scattering data under noise in microwave resonators," <i>Rev. Sci. Instrum.</i> 86, 024706 (2015).</li>
+<li>Google Quantum AI, "Willow spec sheet," 9 Dec 2024.</li>
+<li>L. Abdurakhimov et al., "Technology and performance benchmarks of IQM's 20-qubit quantum computer," arXiv:2408.12433 (2024).</li>
+<li>Rigetti Computing, "Rigetti Computing launches 84-qubit Ankaa-3 system; achieves 99.5% median two-qubit gate fidelity milestone," press release, 23 Dec 2024.</li>
+<li>PostQuantum, "IBM Heron r2" industry news (2024), reporting IBM's calibration update (secondary source).</li>
+<li>J. Heinsoo et al., "Rapid high-fidelity multiplexed readout of superconducting qubits," <i>Phys. Rev. Applied</i> 10, 034040 (2018).</li>
+<li>M. D. Reed et al., "High-fidelity readout in circuit quantum electrodynamics using the Jaynes–Cummings nonlinearity," <i>Phys. Rev. Lett.</i> 105, 173601 (2010).</li>
+<li>J. M. Gambetta, F. Motzoi, S. T. Merkel, F. K. Wilhelm, "Analytic control methods for high-fidelity unitary operations in a weakly nonlinear oscillator," <i>Phys. Rev. A</i> 83, 012308 (2011).</li>
+</ol>
+<h3><span class="tr">Gerçek tasarım için araçlar</span><span class="en">Tools for real design work</span></h3>
+<div class="tbl"><table><thead id="toolH"></thead><tbody id="toolT"></tbody></table></div>
+<h3><span class="tr">Görseller</span><span class="en">Images</span></h3>
+<ol class="refs">
+<li>IQM Quantum Computer, Espoo — Ragsxl, <a href="https://creativecommons.org/licenses/by-sa/4.0" target="_blank" rel="noopener">CC BY-SA 4.0</a> · <a href="https://commons.wikimedia.org/wiki/File:IQM_Quantum_Computer_Espoo_Finland.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></li>
+<li>IBM Quantum System One — Onri Jay Benally, <a href="https://creativecommons.org/licenses/by/4.0" target="_blank" rel="noopener">CC BY 4.0</a> · <a href="https://commons.wikimedia.org/wiki/File:IBM_Quantum_System_One.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></li>
+<li>Alice &amp; Bob cryostat — Nilhope, <a href="https://creativecommons.org/licenses/by-sa/4.0" target="_blank" rel="noopener">CC BY-SA 4.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Alice_and_Bob_Cryostat.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></li>
+<li>4-qubit chip — Y. Salathé et al., Phys. Rev. X 5, 021027 (2015), <a href="https://creativecommons.org/licenses/by-sa/3.0" target="_blank" rel="noopener">CC BY-SA 3.0</a> · <a href="https://commons.wikimedia.org/wiki/File:4_Qubit_Chip,_10.1103.PhysRevX.5.021027_(A._Wallraff,_2015).png" target="_blank" rel="noopener">Wikimedia Commons</a></li>
+<li>Fluxonium SEM — N. Cottet, H. Xiong, L. B. Nguyen et al., Nat. Commun. (2021), <a href="https://creativecommons.org/licenses/by-sa/4.0" target="_blank" rel="noopener">CC BY-SA 4.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Fluxonium_Qubit.png" target="_blank" rel="noopener">Wikimedia Commons</a></li>
+</ol>
+<p class="note tr">Fotoğraflar yalnız boyutlandırıldı.</p><p class="note en">Photos were only resized.</p>
+</section>
+
+<!-- ===================== 18 ABOUT ===================== -->
+<section id="hakkinda" data-g="6" data-no="18" data-title="Hakkında" data-title-en="About" hidden>
+<div class="kicker"><span class="tr">Ek · tezgah hakkında</span><span class="en">Appendix · about the bench</span></div>
+<h2><span class="tr">Bu tezgah neden var?</span><span class="en">Why this bench exists</span></h2>
+<div class="prose">
+<p class="lede tr">Kuantum bilgisayarlar hakkında okuduğum kaynakların çoğu fizikçiler için yazılmış. Oysa bir süperiletken kuantum bilgisayarın donanımının büyük kısmı, RF ve mikrodalga mühendislerinin her gün tasarladığı şeylerden oluşuyor. Kuantum Tezgahı'nı bu boşluğu doldurmak için hazırladım: kuantum kavramlarını, bir RF mühendisinin zaten bildiği cihazların ve hesapların diliyle anlatmak.</p>
+<p class="lede en">Most of what I have read about quantum computers was written for physicists. Yet most of the hardware in a superconducting quantum computer is made of things RF and microwave engineers design every day. I built the Quantum Bench to close that gap: to explain quantum ideas in the language of instruments and calculations an RF engineer already knows.</p>
+<aside><b><span class="tr">Hazırlayan</span><span class="en">Author</span></b>Doruk Yıldön<br><span class="tr">RF ve mikrodalga mühendisliği</span><span class="en">RF and microwave engineering</span></aside>
+</div>
+<h3><span class="tr">Yöntem</span><span class="en">Method</span></h3>
+<div class="prose">
+<p class="tr">Bütün hesaplar tarayıcıda, açık formüllerle yapılıyor. Çoğu pertürbatif yaklaşımdır ve bir tasarımın ilk turu için uygundur; son tasarım için tam köşegenleştirme (scqubits), EM simülasyonu ve ölçüm gerekir. Literatürden alınan değerler numaralı kaynaklarla verildi. <span class="dag">†</span> işaretli değerler tipik mertebelerdir, ölçüm değildir. Punch-out haritası ve IQ dağılımları gösterim amaçlı modellerdir.</p>
+<p class="en">All calculations run in the browser from open formulas. Most are perturbative approximations suited to the first pass of a design; a final design needs exact diagonalisation (scqubits), EM simulation and measurement. Values from the literature carry numbered references. Values marked <span class="dag">†</span> are typical orders of magnitude, not measurements. The punch-out map and IQ scatter are illustrative models.</p>
+</div>
+<h3><span class="tr">Sürüm geçmişi</span><span class="en">Changelog</span></h3>
+<div class="tbl"><table><thead id="chgH"></thead><tbody id="chgT"></tbody></table></div>
+<p class="note tr">Hata gördüyseniz ya da bir cihaz eklenmesini istiyorsanız LinkedIn üzerinden yazabilirsiniz.</p>
+<p class="note en">If you spot an error or want another instrument on the bench, reach out on LinkedIn.</p>
+</section>
+
+<div class="pager" id="pager"></div>
+</main>
+</div>
+<footer class="foot"><p><b><span class="tr">Kuantum Tezgahı</span><span class="en">Quantum Bench</span></b> · Doruk Yıldön · v1.0 · 2026</p><p><span class="tr">Eğitim amaçlıdır. Hesaplar el hesabıdır; tasarımı simülasyon ve ölçümle doğrulayın.</span><span class="en">For education. Calculations are hand estimates; verify designs with simulation and measurement.</span></p></footer>
+<script>(()=>{
+'use strict';
+/* ================= utilities ================= */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const K={h:6.62607015e-34,hb:1.054571817e-34,e:1.602176634e-19,kB:1.380649e-23,c:299792458};
+const PHI0=K.h/(2*K.e), TAU=2*Math.PI;
+let lang=document.documentElement.getAttribute('data-lang')==='en'?'en':'tr';
+const L=(tr,en)=>lang==='en'?en:tr;
+const LI=()=>lang==='en'?1:0;
+const DAG='<span class="dag">†</span>';
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const v=id=>parseFloat(document.getElementById(id).value);
+const SUP='⁰¹²³⁴⁵⁶⁷⁸⁹';
+const sup=n=>String(n).split('').map(c=>c==='-'?'⁻':SUP[+c]).join('');
+function sig(x,n=3){
+  if(!isFinite(x)) return '—'; if(x===0) return '0';
+  const a=Math.abs(x);
+  if(a>=1e-3&&a<1e5) return String(Number(x.toPrecision(n)));
+  let ex=Math.floor(Math.log10(a)), m=Number((x/10**ex).toPrecision(n)); if(Math.abs(m)>=10){m/=10;ex++;}
+  return m+'×10'+sup(ex);
+}
+const PRE=[[1e12,'T'],[1e9,'G'],[1e6,'M'],[1e3,'k'],[1,''],[1e-3,'m'],[1e-6,'µ'],[1e-9,'n'],[1e-12,'p'],[1e-15,'f'],[1e-18,'a']];
+function si(x,u,n=3){
+  if(!isFinite(x)) return '—'; if(x===0) return '0 '+u;
+  const a=Math.abs(x);
+  for(const [f,p] of PRE){ if(a>=f*0.99995) return Number((x/f).toPrecision(n))+' '+p+u; }
+  return sig(x,n)+' '+u;
+}
+const db=x=>10*Math.log10(x);
+const nth=(f,T)=>T>0?1/Math.expm1(K.h*f/(K.kB*T)):0;
+function rows(el,arr){ el.innerHTML=arr.filter(Boolean).map(r=>`<div class="row ${r[2]||''}"><dt>${r[0]}</dt><dd>${r[1]}</dd></div>`).join(''); }
+function err(el,msg){ el.innerHTML=`<div class="row bad"><dt>${L('Girdi hatası','Input error')}</dt><dd>${msg}</dd></div>`; }
+function mk(el,arr){ el.innerHTML=arr.map(([c,t])=>`<span style="color:var(${c})">${t}</span>`).join(''); }
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const calcs=[], statics=[];
+function bind(ids,fn){ ids.forEach(id=>{const el=document.getElementById(id); if(!el) return; el.addEventListener('input',fn); el.addEventListener('change',fn);}); calcs.push(fn); }
+const thead=(el,cols)=>{el.innerHTML='<tr>'+cols.map(c=>`<th>${c}</th>`).join('')+'</tr>';};
+const fmtF=(ghz,d=4)=>ghz.toFixed(d)+' GHz';
+function mulberry(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+const gaussFrom=rnd=>()=>{let u=0; while(u===0)u=rnd(); return Math.sqrt(-2*Math.log(u))*Math.cos(TAU*rnd());};
+function erfc(x){const z=Math.abs(x),t=1/(1+0.5*z),r=t*Math.exp(-z*z-1.26551223+t*(1.00002368+t*(0.37409196+t*(0.09678418+t*(-0.18628806+t*(0.27886807+t*(-1.13520398+t*(1.48851587+t*(-0.82215223+t*0.17087277)))))))));return x>=0?r:2-r;}
+
+/* ================= instrument screen ================= */
+function niceTicks(a,b,n=5){
+  const span=b-a; if(!(span>0)) return [a];
+  const s0=span/n, mag=10**Math.floor(Math.log10(s0)), r=s0/mag, st=(r<1.5?1:r<3?2:r<7?5:10)*mag, out=[];
+  for(let t=Math.ceil(a/st)*st;t<=b+st*1e-9;t+=st) out.push(+t.toFixed(12));
+  return out;
+}
+const tickFmt=t=>{const a=Math.abs(t); if(a<1e-12) return '0'; if(a>=1e4||a<1e-2) return t.toExponential(0); return String(+t.toPrecision(4));};
+function prep(cv){
+  const W=cv.clientWidth,H=cv.clientHeight; if(!W||!H) return null;
+  const d=window.devicePixelRatio||1; cv.width=Math.round(W*d); cv.height=Math.round(H*d);
+  const g=cv.getContext('2d'); g.setTransform(d,0,0,d,0,0); g.clearRect(0,0,W,H);
+  return {g,W,H};
+}
+function screen(cv,o){
+  const P=prep(cv); if(!P) return null; const {g,W,H}=P;
+  const m={l:o.ml||48,r:10,t:22,b:22}, pw=W-m.l-m.r, ph=H-m.t-m.b;
+  g.fillStyle=css('--screen'); g.fillRect(0,0,W,H);
+  const xd=o.xdiv||10, yd=o.ydiv||8, [x0,x1]=o.xr, [y0,y1]=o.yr;
+  const X=x=>m.l+(x-x0)/(x1-x0)*pw, Y=y=>m.t+(1-(y-y0)/(y1-y0))*ph;
+  g.lineWidth=1;
+  for(let i=0;i<=xd;i++){const x=Math.round(m.l+i*pw/xd)+.5; g.strokeStyle=css(i===xd/2?'--grat-hi':'--grat'); g.beginPath(); g.moveTo(x,m.t); g.lineTo(x,m.t+ph); g.stroke();}
+  for(let j=0;j<=yd;j++){const y=Math.round(m.t+j*ph/yd)+.5; g.strokeStyle=css(j===yd/2?'--grat-hi':'--grat'); g.beginPath(); g.moveTo(m.l,y); g.lineTo(m.l+pw,y); g.stroke();}
+  if(o.pre){ g.save(); g.beginPath(); g.rect(m.l,m.t,pw,ph); g.clip(); o.pre(g,X,Y,m,pw,ph); g.restore();
+    g.lineWidth=1; for(let i=0;i<=xd;i++){const x=Math.round(m.l+i*pw/xd)+.5; g.strokeStyle='rgba(255,255,255,.08)'; g.beginPath(); g.moveTo(x,m.t); g.lineTo(x,m.t+ph); g.stroke();}
+    for(let j=0;j<=yd;j++){const y=Math.round(m.t+j*ph/yd)+.5; g.beginPath(); g.moveTo(m.l,y); g.lineTo(m.l+pw,y); g.stroke();} }
+  g.font='10.5px '+css('--f-mono'); g.fillStyle=css('--muted'); g.textAlign='right'; g.textBaseline='middle';
+  for(let j=0;j<=yd;j+=(o.ystep||1)){const val=y1-(y1-y0)*j/yd; g.fillText(o.yfmt?o.yfmt(val):tickFmt(val),m.l-5,m.t+j*ph/yd);}
+  g.textBaseline='alphabetic'; g.textAlign='left'; let hx=m.l;
+  (o.legend||[]).forEach(([lab,c])=>{g.fillStyle=css(c); g.fillText(lab,hx,14); hx+=g.measureText(lab).width+18;});
+  if(o.hdrR){g.textAlign='right'; g.fillStyle=css('--muted'); g.fillText(o.hdrR,W-m.r,14);}
+  g.textAlign='left'; g.fillStyle=css('--muted'); if(o.ftrL) g.fillText(o.ftrL,m.l,H-6);
+  if(o.ftrR){g.textAlign='right'; g.fillText(o.ftrR,W-m.r,H-6);} if(o.ftrC){g.textAlign='center'; g.fillText(o.ftrC,m.l+pw/2,H-6);}
+  g.save(); g.beginPath(); g.rect(m.l,m.t,pw,ph); g.clip();
+  (o.vlines||[]).forEach(l=>{g.strokeStyle=css(l.c); g.lineWidth=1; g.setLineDash(l.dash||[4,4]); g.beginPath(); g.moveTo(X(l.x),m.t); g.lineTo(X(l.x),m.t+ph); g.stroke(); g.setLineDash([]);});
+  (o.hlines||[]).forEach(l=>{g.strokeStyle=css(l.c); g.lineWidth=1; g.setLineDash(l.dash||[4,4]); g.beginPath(); g.moveTo(m.l,Y(l.y)); g.lineTo(m.l+pw,Y(l.y)); g.stroke(); g.setLineDash([]);});
+  (o.traces||[]).forEach(t=>{
+    g.strokeStyle=css(t.c); g.fillStyle=css(t.c); g.lineWidth=t.w||1.6;
+    if(t.dots){ g.globalAlpha=t.alpha||.6; t.x.forEach((x,i)=>{g.beginPath(); g.arc(X(x),Y(t.y[i]),t.r||1.8,0,TAU); g.fill();}); g.globalAlpha=1; return; }
+    g.beginPath(); let pen=false; t.x.forEach((x,i)=>{const yy=t.y[i]; if(!isFinite(yy)){pen=false;return;} const px=X(x),py=Y(yy); pen?g.lineTo(px,py):g.moveTo(px,py); pen=true;}); g.stroke();
+  });
+  g.restore();
+  (o.markers||[]).forEach(p=>{const px=X(p.x), py=Math.max(m.t+12,Math.min(m.t+ph,Y(p.y))); if(px<m.l-1||px>m.l+pw+1) return; g.fillStyle=css(p.c);
+    g.beginPath(); g.moveTo(px-5,py-12); g.lineTo(px+5,py-12); g.lineTo(px,py-3); g.closePath(); g.fill();
+    g.font='600 10px '+css('--f-mono'); g.textAlign='center'; g.fillText(p.l,px,py-15);});
+  return {g,X,Y,m,pw,ph,W,H};
+}
+const CMAP=[[0,[3,5,7]],[.3,[40,22,62]],[.55,[140,40,92]],[.78,[212,135,74]],[1,[243,210,62]]];
+function cmap(t){t=Math.max(0,Math.min(1,t)); for(let i=1;i<CMAP.length;i++){if(t<=CMAP[i][0]){const [a,ca]=CMAP[i-1],[b,cb]=CMAP[i],u=(t-a)/(b-a); return ca.map((c,k)=>Math.round(c+(cb[k]-c)*u));}} return CMAP[CMAP.length-1][1];}
+
+/* ================= routing, nav, language ================= */
+const secs=$$('main section');
+const GROUPS=[['Temel','Fundamentals'],['Ölçüm cihazları','Instruments'],['Sistem','System'],['Kuantum','Quantum'],['Ölçek','Scale'],['Pratik','Practice'],['Ek','Appendix']];
+const title=s=>lang==='en'?s.dataset.titleEn:s.dataset.title;
+const redrawers={};
+const onSec=(id,f)=>{(redrawers[id]=redrawers[id]||[]).push(f);};
+const curId=()=>{const id=location.hash.slice(1); return secs.some(s=>s.id===id)?id:secs[0].id;};
+function renderNav(){
+  const id=curId();
+  $('#nav').innerHTML=GROUPS.map((gn,gi)=>{const ss=secs.filter(s=>+s.dataset.g===gi); return `<div class="grp"><h5>${gn[LI()]}</h5><ol>`+ss.map(s=>`<li><a href="#${s.id}"${s.id===id?' aria-current="page"':''}><span class="t">${s.dataset.no}</span><span>${title(s)}</span></a></li>`).join('')+'</ol></div>';}).join('');
+  const i=secs.findIndex(s=>s.id===id), p=secs[i-1], n=secs[i+1];
+  $('#pager').innerHTML=(p?`<a href="#${p.id}">← ${p.dataset.no} ${title(p)}</a>`:'<span></span>')+(n?`<a href="#${n.id}">${n.dataset.no} ${title(n)} →</a>`:'');
+}
+function route(){ const id=curId(); secs.forEach(s=>s.hidden=s.id!==id); renderNav(); requestAnimationFrame(()=>(redrawers[id]||[]).forEach(f=>f())); }
+window.addEventListener('hashchange',()=>{route(); window.scrollTo(0,0);});
+const redrawAll=()=>{const s=secs.find(s=>!s.hidden); if(s)(redrawers[s.id]||[]).forEach(f=>f());};
+let rT; window.addEventListener('resize',()=>{clearTimeout(rT); rT=setTimeout(redrawAll,120);});
+let anim=null;
+function applyLang(l){
+  lang=l; document.documentElement.setAttribute('data-lang',l); document.documentElement.lang=l;
+  try{localStorage.setItem('qb-lang',l);}catch(e){}
+  document.title=L('Kuantum Tezgahı','Quantum Bench');
+  $$('.lang button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.l===l)));
+  $('#q').placeholder=L('Ara: Purcell, HEMT, Smith, χ…','Search: Purcell, HEMT, Smith, χ…');
+  $('#q').setAttribute('aria-label',L('Tezgahta ara','Search the bench'));
+  $('#bPlay').textContent=anim?L('Durdur','Stop'):L('Oynat','Play');
+  statics.forEach(f=>f()); calcs.forEach(f=>f()); renderNav(); redrawAll();
+  if(qIn.value) qIn.dispatchEvent(new Event('input'));
+}
+$$('.lang button').forEach(b=>b.addEventListener('click',()=>applyLang(b.dataset.l)));
+
+/* ================= search ================= */
+const qIn=$('#q'), qRes=$('#qres');
+function secText(s){ const c=s.cloneNode(true); c.querySelectorAll(lang==='en'?'.tr':'.en').forEach(e=>e.remove()); return c.textContent.replace(/\s+/g,' '); }
+qIn.addEventListener('input',()=>{
+  const loc=lang==='en'?'en':'tr', q=qIn.value.trim().toLocaleLowerCase(loc);
+  if(q.length<2){qRes.hidden=true; return;}
+  const res=[];
+  secs.forEach(s=>{
+    const t=secText(s), lt=t.toLocaleLowerCase(loc); let i=lt.indexOf(q); if(i<0) return; const first=i; let c=0;
+    while(i>=0){c++; i=lt.indexOf(q,i+q.length);}
+    const a=Math.max(0,first-50), sn=t.slice(a,first)+'\u0001'+t.slice(first,first+q.length)+'\u0002'+t.slice(first+q.length,first+q.length+70);
+    res.push({s,c,sn:(a?'…':'')+esc(sn).replace('\u0001','<mark>').replace('\u0002','</mark>')+'…'});
+  });
+  qRes.innerHTML=res.length?res.sort((a,b)=>b.c-a.c).map(r=>`<a href="#${r.s.id}">${r.s.dataset.no} · ${title(r.s)} <span class="mono" style="color:var(--muted)">(${r.c})</span><small>${r.sn}</small></a>`).join(''):`<p class="note" style="padding:8px">${L('Sonuç yok.','No results.')}</p>`;
+  qRes.hidden=false;
+});
+qIn.addEventListener('keydown',e=>{ if(e.key==='Enter'){const a=qRes.querySelector('a'); if(a){location.hash=a.getAttribute('href'); qRes.hidden=true;}} if(e.key==='Escape') qRes.hidden=true; });
+qRes.addEventListener('click',e=>{ if(e.target.closest('a')) qRes.hidden=true; });
+document.addEventListener('click',e=>{ if(!e.target.closest('.search')) qRes.hidden=true; });
+
+/* ================= 01 rack ================= */
+const RACK=[
+ ['vna','VNA','S21 · LogM / Phase',['Dispersif okuma: |0⟩ ve |1⟩ için iki Lorentz','Dispersive readout: two Lorentzians for |0⟩ and |1⟩']],
+ ['smith','Smith','S11 · circle fit',['Q<sub>i</sub> ve Q<sub>e</sub>\'yi çember uydurmayla ayırın','Separate Q<sub>i</sub> and Q<sub>e</sub> with a circle fit']],
+ ['spektroskopi','Punch-out','|S21| vs P',['Qubit\'in orada olduğunu ilk gösteren ölçüm','The first measurement that shows the qubit is there']],
+ ['spektrum','SA','LO · image · f₁₂',['Sürüş hattındaki tonlar ve frekans planı','Tones on the drive line and frequency planning']],
+ ['osiloskop','Scope','DRAG · I/Q',['20 ns\'lik bir kapının dalga şekli','The waveform of a 20 ns gate']],
+ ['kriyostat','Cryostat','n̄ · heat',['Zayıflatıcı bütçesi ve kademe ısı yükü','Attenuator budget and stage heat load']],
+ ['okuma','NF','Friis · η',['TWPA → HEMT → LNA gürültü kaskadı','TWPA → HEMT → LNA noise cascade']],
+ ['coklama','MUX','FDM readout',['Tek besleme hattında N rezonatör','N resonators on one feedline']],
+ ['cip','Chip','layout map',['Çip üzerindeki her elemanın RF karşılığı','The RF meaning of every element on the chip']],
+];
+statics.push(()=>{ $('#rack').innerHTML=RACK.map(([id,n,f,d])=>`<a href="#${id}"><span class="face">${f}<span class="led"></span></span><b>${n}</b><span class="d">${d[LI()]}</span></a>`).join(''); });
+
+/* ================= 02 qubit ================= */
+statics.push(function levels(){
+  const svg=$('#levels'), r=30, EC=1, EJ=r*EC, wp=Math.sqrt(8*EJ*EC);
+  const E=n=>-EJ+wp*(n+0.5)-EC/12*(6*n*n+6*n+3);
+  const panel=(x0,ttl,U,lv,scale,trm)=>{
+    const w=300,h=230,top=40,Umax=lv[lv.length-1]*1.25, X=p=>x0+w/2+p/Math.PI*(w/2), Yv=u=>top+h-(u/Umax)*h;
+    let d=''; for(let i=0;i<=120;i++){const p=-Math.PI+i/120*TAU; d+=(i?'L':'M')+X(p).toFixed(1)+' '+Math.max(top-4,Yv(U(p))).toFixed(1);}
+    let s=`<text x="${x0+w/2}" y="20" text-anchor="middle" style="font-family:var(--f-display);font-weight:600;font-size:17px">${ttl}</text><path class="${trm?'acc':'stroke'}" d="${d}"/>`;
+    lv.forEach((e,i)=>{ let a=-Math.PI; for(let k=0;k<=400;k++){const p=-Math.PI+k/400*Math.PI; if(U(p)<=e){a=p;break;}}
+      s+=`<path style="stroke:var(${i<2?'--t1':'--muted'});stroke-width:${i<2?2:1};fill:none" d="M${X(a).toFixed(1)} ${Yv(e).toFixed(1)}H${X(-a).toFixed(1)}"/><text x="${X(-a)+6}" y="${Yv(e)+4}" class="m">|${i}⟩</text>`;
+      if(i>0) s+=`<text x="${x0+4}" y="${(Yv(e)+Yv(lv[i-1]))/2+4}" class="m">${((e-lv[i-1])*scale).toFixed(2)}</text>`; });
+    return s+`<text x="${x0+w/2}" y="${top+h+22}" text-anchor="middle" class="m">φ (−π … π)</text>`;
+  };
+  const harm=[0,1,2,3].map(n=>wp*(n+0.5)), tr=[0,1,2,3].map(n=>E(n)+EJ);
+  svg.innerHTML=panel(20,L('LC tank (doğrusal)','LC tank (linear)'),p=>0.5*EJ*p*p,harm,1/wp,false)+panel(400,'Transmon',p=>EJ*(1-Math.cos(p)),tr,1/(tr[1]-tr[0]),true)
+   +`<text x="20" y="292" class="m">${L('Soldaki sayılar: seviye aralığı, ilk aralığa oranla.','Numbers on the left: level spacing relative to the first one.')}</text>`;
+});
+bind(['ljIc','ljR'],()=>{
+  const Ic=v('ljIc')*1e-9, r=v('ljR'), o=$('#oLJ');
+  if(!(Ic>0)) return err(o,L('I_c > 0 olmalı','I_c must be > 0')); if(!(r>=0&&r<1)) return err(o,L('0 ≤ I/I_c < 1 olmalı','need 0 ≤ I/I_c < 1'));
+  const L0=PHI0/(TAU*Ic), Lj=L0/Math.sqrt(1-r*r);
+  rows(o,[['L<sub>J0</sub>',si(L0,'H')],['L<sub>J</sub>(I)',si(Lj,'H')],[L('Değişim','Change'),sig((Lj/L0-1)*100)+' %'],['E<sub>J</sub>/h',si(PHI0*Ic/TAU/K.h,'Hz')]]);
+});
+function transmon(){
+  const EJ=v('tEJ'), EC=v('tEC'), o=$('#oT');
+  if(!(EJ>0&&EC>0)) return err(o,L('E_J, E_C > 0 olmalı','E_J, E_C must be > 0'));
+  const r=EJ/EC, fp=Math.sqrt(8*EJ*EC), f01=fp-EC, pre=EC*Math.sqrt(2/Math.PI)*Math.exp(-Math.sqrt(8*r)), e0=pre*32*Math.pow(r/2,.75), e1=pre*512*Math.pow(r/2,1.25);
+  rows(o,[['f<sub>01</sub>',si(f01*1e9,'Hz',4)],['f<sub>12</sub>',si((f01-EC)*1e9,'Hz',4)],['α/2π',si(-EC*1e9,'Hz')],
+    ['E<sub>J</sub>/E<sub>C</sub>',sig(r)+(r<20?L(' · yük gürültüsüne açık',' · charge-noise prone'):r<40?L(' · sınırda',' · marginal'):L(' · transmon',' · transmon')),r<20?'bad':r<40?'warn':'good'],
+    [L('f<sub>01</sub> yük dağılımı (p-p)','f<sub>01</sub> charge dispersion (p-p)'),si((e0+e1)*1e9,'Hz')]]);
+}
+bind(['tEJ','tEC'],transmon);
+bind(['jIc','jC'],()=>{
+  const Ic=v('jIc')*1e-9, C=v('jC')*1e-15, o=$('#oJ');
+  if(!(Ic>0&&C>0)) return err(o,L('I_c, C_Σ > 0 olmalı','I_c, C_Σ must be > 0'));
+  const EJ=PHI0*Ic/TAU/K.h, EC=K.e*K.e/(2*C)/K.h, Lj=PHI0/(TAU*Ic);
+  rows(o,[['E<sub>J</sub>/h',si(EJ,'Hz',4)],['E<sub>C</sub>/h',si(EC,'Hz',4)],['E<sub>J</sub>/E<sub>C</sub>',sig(EJ/EC)],['L<sub>J0</sub>',si(Lj,'H')],['f<sub>01</sub> ≈',si(Math.sqrt(8*EJ*EC)-EC,'Hz',4)]]);
+});
+$('#jPush').addEventListener('click',()=>{ const Ic=v('jIc')*1e-9, C=v('jC')*1e-15; if(!(Ic>0&&C>0)) return;
+  $('#tEJ').value=+(PHI0*Ic/TAU/K.h/1e9).toPrecision(5); $('#tEC').value=+(K.e*K.e/(2*C)/K.h/1e9).toPrecision(5); transmon(); });
+bind(['thF','thT'],()=>{
+  const f=v('thF')*1e9, Tc=v('thT')*1e-3, tb=$('#oTh');
+  if(!(f>0)){tb.innerHTML=`<tr><td colspan="4" class="msg bad">${L('f > 0 olmalı','f must be > 0')}</td></tr>`;return;}
+  const Ts=[[0.01,'10 mK'],[Tc,'<b>'+sig(Tc*1e3)+' mK</b>'],[0.05,'50 mK'],[0.8,'0.8 K'],[4,'4 K'],[300,'300 K']].filter(t=>t[0]>0);
+  tb.innerHTML=Ts.map(([T,l])=>{const x=K.h*f/(K.kB*T); return `<tr><td>${l}</td><td class="n">${sig(x)}</td><td class="n">${sig(nth(f,T))}</td><td class="n">${sig(1/(1+Math.exp(x)))}</td></tr>`;}).join('');
+});
+/* Bloch / Rabi */
+const bS={t:50};
+function blochState(Om,De,t){
+  const W=Math.hypot(Om,De); if(W===0) return [0,0,1];
+  const k=[Om/W,0,De/W], th=TAU*W*1e6*t*1e-9, c=Math.cos(th), s=Math.sin(th), vv=[0,0,1];
+  const kx=[k[1]*vv[2]-k[2]*vv[1],k[2]*vv[0]-k[0]*vv[2],k[0]*vv[1]-k[1]*vv[0]];
+  return [0,1,2].map(i=>vv[i]*c+kx[i]*s+k[i]*k[2]*(1-c));
+}
+function drawBloch(){
+  const P=prep($('#cvBloch')); if(!P) return; const {g,W,H}=P;
+  g.fillStyle=css('--screen'); g.fillRect(0,0,W,H);
+  const Om=v('bO'), De=v('bD'), t=bS.t, R=Math.min(W,H)*0.38, cx=W/2, cy=H/2+4, az=-0.7, el=0.32;
+  const pr=p=>{const x1=p[0]*Math.cos(az)-p[1]*Math.sin(az), y1=p[0]*Math.sin(az)+p[1]*Math.cos(az); return [cx+R*x1, cy-R*(y1*Math.sin(el)+p[2]*Math.cos(el)), y1*Math.cos(el)-p[2]*Math.sin(el)];};
+  const mu=css('--muted'), gr=css('--grat-hi');
+  g.strokeStyle=mu; g.lineWidth=1; g.beginPath(); g.arc(cx,cy,R,0,TAU); g.stroke();
+  const ring=f=>{for(let pass=0;pass<2;pass++){g.beginPath(); let st=false; for(let i=0;i<=120;i++){const q=pr(f(i/120*TAU)); const back=q[2]>0; if((pass===0)!==back){st=false;continue;} st?g.lineTo(q[0],q[1]):g.moveTo(q[0],q[1]); st=true;} g.setLineDash(pass?[]:[3,4]); g.strokeStyle=pass?mu:gr; g.stroke();} g.setLineDash([]);};
+  ring(a=>[Math.cos(a),Math.sin(a),0]); ring(a=>[Math.cos(a),0,Math.sin(a)]);
+  g.font='12px '+css('--f-mono'); g.fillStyle=css('--fg'); g.textAlign='center'; g.textBaseline='middle';
+  [[[0,0,1.18],'|0⟩'],[[0,0,-1.2],'|1⟩'],[[1.3,0,0],'x'],[[0,1.3,0],'y']].forEach(([p,l])=>{const q=pr(p); g.fillText(l,q[0],q[1]);});
+  g.strokeStyle=gr; [[1,0,0],[0,1,0],[0,0,1]].forEach(a=>{const p=pr(a), mm=pr(a.map(x=>-x)); g.beginPath(); g.moveTo(mm[0],mm[1]); g.lineTo(p[0],p[1]); g.stroke();});
+  const Wf=Math.hypot(Om,De); if(Wf>0){const p=pr([Om/Wf,0,De/Wf]); g.strokeStyle=css('--copper'); g.setLineDash([2,3]); g.beginPath(); g.moveTo(cx,cy); g.lineTo(p[0],p[1]); g.stroke(); g.setLineDash([]);}
+  g.strokeStyle=css('--t2'); g.lineWidth=2; g.beginPath();
+  for(let i=0;i<=240;i++){const q=pr(blochState(Om,De,t*i/240)); i?g.lineTo(q[0],q[1]):g.moveTo(q[0],q[1]);} g.stroke();
+  const q=pr(blochState(Om,De,t)); g.strokeStyle=css('--t1'); g.lineWidth=2.5; g.beginPath(); g.moveTo(cx,cy); g.lineTo(q[0],q[1]); g.stroke();
+  g.fillStyle=css('--t1'); g.beginPath(); g.arc(q[0],q[1],5,0,TAU); g.fill();
+}
+function drawRabi(){
+  const Om=v('bO'), De=v('bD'), W=Math.hypot(Om,De), P1=t=>W?(Om*Om/(W*W))*Math.sin(Math.PI*W*1e-3*t)**2:0, x=[], y=[];
+  for(let i=0;i<=400;i++){const t=i/2; x.push(t); y.push(P1(t));}
+  screen($('#cvRabi'),{xr:[0,200],yr:[0,1],ydiv:4,legend:[['P(|1⟩)','--t2']],hdrR:L('Rabi','Rabi'),ftrL:'0 ns',ftrR:'200 ns',traces:[{x,y,c:'--t2'}],vlines:[{x:bS.t,c:'--t1'}],markers:[{x:bS.t,y:P1(bS.t),c:'--t1',l:'1'}]});
+}
+function bloch(){
+  const Om=v('bO'), De=v('bD'); if(!anim) bS.t=v('bT');
+  $('#bOv').textContent=Om+' MHz'; $('#bDv').textContent=De+' MHz'; $('#bTv').textContent=bS.t+' ns';
+  const W=Math.hypot(Om,De), s=blochState(Om,De,bS.t);
+  mk($('#mkB'),[['--t1','M1 t = '+bS.t+' ns · P₁ = '+((1-s[2])/2).toFixed(3)],['--t2','Ω_eff/2π = '+si(W*1e6,'Hz')],['--muted','t_π = '+si(1/(2*Om*1e6),'s')]]);
+  drawBloch(); drawRabi();
+}
+bind(['bO','bD','bT'],bloch); onSec('qubit',bloch);
+$('#bPi').addEventListener('click',()=>{ $('#bD').value=0; $('#bT').value=Math.min(200,+(1e3/(2*v('bO'))).toFixed(1)); bloch(); });
+$('#bPi2').addEventListener('click',()=>{ $('#bD').value=0; $('#bT').value=Math.min(200,+(1e3/(4*v('bO'))).toFixed(1)); bloch(); });
+$('#bPlay').addEventListener('click',()=>{
+  const btn=$('#bPlay');
+  if(anim){cancelAnimationFrame(anim); anim=null; btn.textContent=L('Oynat','Play'); bloch(); return;}
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){bloch(); return;}
+  const end=v('bT')||100, t0=performance.now(); btn.textContent=L('Durdur','Stop');
+  const step=now=>{const f=Math.min(1,(now-t0)/2000); bS.t=+(end*f).toFixed(1); $('#bTv').textContent=bS.t+' ns'; drawBloch(); drawRabi();
+    if(f<1) anim=requestAnimationFrame(step); else {anim=null; btn.textContent=L('Oynat','Play'); bloch();}};
+  anim=requestAnimationFrame(step);
+});
+
+/* ================= 03 chip map ================= */
+const CHIP={
+ feed:{t:['Besleme hattı','Feedline'],d:['Tüm okuma rezonatörlerinin asılı olduğu 50 Ω CPW. Bir uçtan okuma tonu girer, diğer uçtan TWPA\'ya gider.','The 50 Ω CPW all readout resonators hang off. The readout tone enters at one end and leaves towards the TWPA at the other.'],rf:['Notch filtre bankası taşıyan iletim hattı','A transmission line carrying a bank of notch filters'],ty:'Z₀ = 50 Ω',go:['vna','VNA']},
+ purcell:{t:['Purcell filtresi','Purcell filter'],d:['Okuma rezonatörleriyle besleme hattı arasında bant geçiren filtre. f<sub>r</sub>\'yi geçirir, f<sub>q</sub>\'de qubit\'i hattan yalıtır.','A bandpass filter between the readout resonators and the feedline. It passes f<sub>r</sub> and isolates the qubit from the line at f<sub>q</sub>.'],rf:['Diplexer / BPF, qubit frekansında reddetme','Diplexer / BPF with rejection at the qubit frequency'],ty:L('T₁,P ≈ filtre reddetmesi kadar uzar','T₁,P grows by about the filter rejection'),go:['vna','Purcell']},
+ rr:{t:['Okuma rezonatörü','Readout resonator'],d:['Bir ucu kısa devre, diğer ucu qubit\'e kapasitif kuplajlı λ/4 CPW. Frekansı qubit durumuna göre 2χ kayar.','A λ/4 CPW shorted at one end and capacitively coupled to the qubit at the other. Its frequency shifts by 2χ with the qubit state.'],rf:['λ/4 stub rezonatör','λ/4 stub resonator'],ty:'6–8 GHz · Q_e ~10⁴',go:['vna','VNA']},
+ xmon:{t:['Qubit pad\'i (Xmon)','Qubit pad (Xmon)'],d:['Artı şeklindeki büyük şönt kapasitör. Kolları okuma rezonatörüne, sürüş hattına ve komşu qubit\'e kuplaj sağlar.','The cross-shaped shunt capacitor. Its arms couple to the readout resonator, the drive line and the neighbouring qubit.'],rf:['Tank devresinin büyük şönt C\'si','The big shunt C of the tank'],ty:'C_Σ ≈ 60–100 fF',go:['qubit','Transmon']},
+ jj:{t:['SQUID / Josephson junction','SQUID / Josephson junction'],d:['İki paralel junction. Halkadan geçen akı etkin I<sub>c</sub>\'yi, dolayısıyla qubit frekansını ayarlar.','Two junctions in parallel. Flux through the loop sets the effective I<sub>c</sub> and therefore the qubit frequency.'],rf:['Kayıpsız, akıyla ayarlanan endüktör','A lossless, flux-tuned inductor'],ty:'L_J ≈ 5–20 nH',go:['qubit','L_J']},
+ xy:{t:['Sürüş (XY) hattı','Drive (XY) line'],d:['Qubit\'e çok zayıf kapasitif kuplajlı 50 Ω hat. Mikrodalga kapı darbeleri buradan gelir. Kuplaj büyük olursa port qubit\'in enerjisini emer.','A 50 Ω line very weakly coupled to the qubit. Gate pulses arrive here. Too much coupling and the port soaks up the qubit\'s energy.'],rf:['Zayıf kuplörlü sürüş portu','A weakly coupled drive port'],ty:'C_d ≲ 0.05 fF',go:['cip','T₁']},
+ z:{t:['Akı (Z) hattı','Flux (Z) line'],d:['Ucu kısa devre CPW. SQUID halkasına karşılıklı endüktansla akı basar; DC\'den ns darbelerine kadar geniş bantlı.','A shorted CPW that threads flux through the SQUID via mutual inductance; broadband from DC to ns pulses.'],rf:['Manyetik kuplajlı akım probu, bias-tee + LPF','A magnetically coupled current probe, bias tee + LPF'],ty:'M ~ pH',go:['kapilar','CZ']},
+ bus:{t:['Kuplaj (bus) rezonatörü','Coupling bus'],d:['İki qubit\'i birbirine bağlayan rezonatör ya da kapasitör. İki qubit kapılarının etkileşimini sağlar.','A resonator or capacitor joining two qubits. It provides the interaction behind two-qubit gates.'],rf:['Kuplajlı rezonatör filtresi','A coupled-resonator filter'],ty:'g/2π ≈ 5–30 MHz',go:['kapilar',L('Kapılar','Gates')]},
+ bridge:{t:['Air-bridge','Air-bridge'],d:['CPW\'nin iki yanındaki toprakları birbirine bağlayan küçük köprüler. Slotline modunu bastırır.','Small bridges tying the ground planes on either side of a CPW together. They suppress the slotline mode.'],rf:['Via çiti, toprak dikişi','Via fence, ground stitching'],ty:L('aralık < λ/10','pitch < λ/10'),go:['cip','CPW']},
+ box:{t:['Paket / kutu','Package / box'],d:['Çipi tutan bakır veya alüminyum kutu bir kavitedir. İlk modu qubit ve rezonatör bandının üstünde kalmalıdır.','The copper or aluminium box holding the chip is a cavity. Its first mode must stay above the qubit and resonator band.'],rf:['Ekranlama kutusu rezonansı','Shield-box resonance'],ty:'TE₁₀₁ > 9 GHz',go:['cip','TE₁₀₁']},
+};
+let chipSel='xmon';
+function chipSvg(){
+  const hit=d=>`<path class="hit" d="${d}"/>`;
+  let s='<rect x="8" y="8" width="624" height="384" rx="6" style="fill:#070a0e;stroke:none"/>';
+  let dots=''; for(let x=20;x<630;x+=18) for(let y=70;y<390;y+=18) dots+=`M${x} ${y}h.01`; s+=`<path d="${dots}" style="stroke:#1c262d;stroke-width:3;stroke-linecap:round"/>`;
+  const G=(k,inner)=>`<g class="ce${chipSel===k?' sel':''}" data-el="${k}" tabindex="0" role="button" aria-label="${CHIP[k].t[LI()]}">${inner}</g>`;
+  s+=G('box','<rect class="vis" x="8" y="8" width="624" height="384" rx="6" style="fill:none;stroke:#3a434e;stroke-width:3"/><rect class="hit" x="8" y="8" width="624" height="384" rx="6"/>');
+  s+=G('feed',`<path class="vis" d="M8 48H250M390 48H632" style="stroke:var(--t2);stroke-width:4;fill:none"/>${hit('M8 48H632')}`);
+  s+=G('purcell','<rect class="vfill" x="250" y="38" width="140" height="20" rx="3" style="fill:#0b2125;stroke:var(--t2);stroke-width:1.5"/><text x="320" y="52" text-anchor="middle" class="w" style="font-size:10px">PURCELL BPF</text>');
+  const mean=(cx)=>{let y=70,d=`M${cx} 58V70`; for(let k=0;k<6;k++){d+=`H${k%2?cx-30:cx+30}V${y+16}`; y+=16;} return d+`H${cx}V198`;};
+  s+=G('rr',`<path class="vis" d="${mean(160)}" style="stroke:var(--t1);stroke-width:2.5;fill:none"/><path class="vis" d="${mean(480)}" style="stroke:var(--t1);stroke-width:2.5;fill:none"/>${hit(mean(160))}${hit(mean(480))}`);
+  const cross=cx=>`<rect class="vfill" x="${cx-7}" y="206" width="14" height="104" style="fill:var(--copper-soft);stroke:var(--copper);stroke-width:1.5"/><rect class="vfill" x="${cx-52}" y="253" width="104" height="14" style="fill:var(--copper-soft);stroke:var(--copper);stroke-width:1.5"/>`;
+  s+=G('xmon',cross(160)+cross(480));
+  const sq=cx=>`<rect class="vfill" x="${cx-9}" y="312" width="18" height="16" style="fill:var(--panel);stroke:var(--fg);stroke-width:1.5"/><path class="vis" d="M${cx-9} 312l18 16M${cx+9} 312l-18 16" style="stroke:var(--copper);stroke-width:1.5"/>`;
+  s+=G('jj',sq(160)+sq(480));
+  s+=G('xy',`<path class="vis" d="M8 260H96M632 260H544" style="stroke:var(--t3);stroke-width:3;fill:none"/>${hit('M8 260H96M632 260H544')}`);
+  s+=G('z',`<path class="vis" d="M196 392V340H172M516 392V340H492" style="stroke:var(--t4);stroke-width:3;fill:none"/>${hit('M196 392V340H172M516 392V340H492')}`);
+  let bz='M218 260H236'; for(let x=236,k=0;x<404;x+=14,k++) bz+=`L${x+7} ${k%2?248:272}L${x+14} 260`; bz+='H422';
+  s+=G('bus',`<path class="vis" d="${bz}" style="stroke:var(--fg);stroke-width:2;fill:none"/>${hit(bz)}`);
+  const br=[70,200,440,570].map(x=>`M${x} 38V58`).join('');
+  s+=G('bridge',`<path class="vis" d="${br}" style="stroke:var(--copper);stroke-width:5;stroke-linecap:round;fill:none"/>${hit(br)}`);
+  s+=`<g style="pointer-events:none"><text x="12" y="30" class="m">IN</text><text x="628" y="30" class="m" text-anchor="end">OUT → TWPA</text><text x="214" y="236" class="a">Q1</text><text x="534" y="236" class="a">Q2</text><text x="200" y="120" class="w">R1</text><text x="520" y="120" class="w">R2</text><text x="14" y="252" class="m">XY1</text><text x="626" y="252" class="m" text-anchor="end">XY2</text><text x="202" y="384" class="m">Z1</text><text x="522" y="384" class="m">Z2</text><text x="320" y="292" class="m" text-anchor="middle">bus</text></g>`;
+  $('#chip').innerHTML=s;
+  const c=CHIP[chipSel], i=LI();
+  $('#elcard').innerHTML=`<div class="kicker">${L('Seçili eleman','Selected element')}</div><h4>${c.t[i]}</h4><p>${c.d[i]}</p><p class="rfl">RF ⇄ ${c.rf[i]}</p><p class="typ">${L('Tipik','Typical')}: ${c.ty}${DAG}</p><p><a href="#${c.go[0]}">${L('İlgili hesap','Related calculator')}: ${c.go[1]} →</a></p>`;
+}
+statics.push(chipSvg);
+$('#chip').addEventListener('click',e=>{const gEl=e.target.closest('.ce'); if(gEl){chipSel=gEl.dataset.el; chipSvg();}});
+$('#chip').addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.closest('.ce')){e.preventDefault(); chipSel=e.target.closest('.ce').dataset.el; chipSvg(); const n=$(`#chip .ce[data-el="${chipSel}"]`); if(n) n.focus();}});
+function ellK(k){let a=1,b=Math.sqrt(1-k*k); for(let i=0;i<40;i++){const an=(a+b)/2; b=Math.sqrt(a*b); a=an; if(Math.abs(a-b)<1e-15) break;} return Math.PI/(2*a);}
+bind(['cW','cS','cEr'],()=>{
+  const w=v('cW'), s=v('cS'), er=v('cEr'), o=$('#oC');
+  if(!(w>0&&s>0&&er>=1)) return err(o,L('w, s > 0, ε_r ≥ 1','need w, s > 0, ε_r ≥ 1'));
+  const k=w/(w+2*s), ee=(er+1)/2, Z=30*Math.PI/Math.sqrt(ee)*ellK(Math.sqrt(1-k*k))/ellK(k), vp=K.c/Math.sqrt(ee);
+  rows(o,[['Z<sub>0</sub>',sig(Z,4)+' Ω',Math.abs(Z-50)<2?'good':''],['ε<sub>eff</sub>',sig(ee,4)],["L′",si(Z/vp,'H/m')],["C′",si(1/(Z*vp),'F/m')]]);
+});
+bind(['xCd','xCs','xF','xZ'],()=>{
+  const Cd=v('xCd')*1e-15, Cs=v('xCs')*1e-15, w=TAU*v('xF')*1e9, Z=v('xZ'), o=$('#oX');
+  if(!(Cd>0&&Cs>0&&w>0&&Z>0)) return err(o,L('tüm değerler > 0','all values > 0'));
+  const T1=Cs/(w*w*Cd*Cd*Z);
+  rows(o,[[L('T<sub>1</sub> sınırı','T<sub>1</sub> limit'),si(T1,'s'),T1<1e-3?'warn':'good'],[L('Bu portun Q\'su','Q of this port'),sig(w*T1)],[L('1 ms için C<sub>d</sub>','C<sub>d</sub> for 1 ms'),si(Math.sqrt(Cs/(1e-3*w*w*Z)),'F')]]);
+});
+bind(['kA','kB','kE'],()=>{
+  const a=v('kA')*1e-3, b=v('kB')*1e-3, e=v('kE'), o=$('#oK');
+  if(!(a>0&&b>0&&e>=1)) return err(o,L('a, b > 0, ε_r ≥ 1','need a, b > 0, ε_r ≥ 1'));
+  const f=K.c/(2*Math.sqrt(e))*Math.hypot(1/a,1/b), low=f<9e9;
+  rows(o,[['f<sub>TE101</sub>',si(f,'Hz',4),low?'warn':'good'],[L('Durum','Status'),low?L('bandın yakınında','close to the band'):L('bandın üstünde','above the band'),low?'warn':'good']]);
+});
+
+/* ================= 04 VNA ================= */
+const hanger=(f,fr,QL,Qe)=>{const x=2*QL*(f-fr)/fr, a=QL/Qe, d=1+x*x; return [1-a/d, a*x/d];}; // 1 - a/(1+jx)
+let vnaData=null;
+function vna(){
+  const fr=v('vFr'), Qi=v('vQi'), Qe=v('vQe'), chi=v('vChi')/1e3, span=v('vSpan')/1e3, ro=v('vRo')/1e3, o=$('#oV');
+  $('#vRoV').textContent=(ro*1e3).toFixed(2)+' MHz';
+  if(!(fr>0&&Qi>0&&Qe>0&&span>0&&isFinite(chi))) return err(o,L('f_r, Q, span > 0 olmalı','f_r, Q and span must be > 0'));
+  const QL=1/(1/Qi+1/Qe), f0=fr+chi, f1=fr-chi, N=801, x=[], m0=[], m1=[], p0=[], p1=[];
+  for(let i=0;i<N;i++){const f=fr-span/2+span*i/(N-1); x.push(f); const a=hanger(f,f0,QL,Qe), b=hanger(f,f1,QL,Qe);
+    m0.push(20*Math.log10(Math.hypot(...a))); m1.push(20*Math.log10(Math.hypot(...b))); p0.push(Math.atan2(a[1],a[0])*180/Math.PI); p1.push(Math.atan2(b[1],b[0])*180/Math.PI);}
+  vnaData={x,fr,QL,Qe,f0};
+  const fro=fr+ro, A=hanger(fro,f0,QL,Qe), B=hanger(fro,f1,QL,Qe), mA=20*Math.log10(Math.hypot(...A)), mB=20*Math.log10(Math.hypot(...B));
+  const pA=Math.atan2(A[1],A[0])*180/Math.PI, pB=Math.atan2(B[1],B[0])*180/Math.PI, dIQ=Math.hypot(A[0]-B[0],A[1]-B[1]);
+  const depth=Math.min(...m0), ymin=Math.min(-3,Math.floor(depth/5)*5-5);
+  screen($('#cvVnaM'),{xr:[x[0],x[N-1]],yr:[ymin,2],ydiv:8,yfmt:t=>t.toFixed(0),legend:[['Tr1 S21 LogM |0⟩','--t1'],['Tr2 S21 LogM |1⟩','--t2']],hdrR:'dB',
+    ftrL:'Start '+fmtF(x[0]),ftrR:'Stop '+fmtF(x[N-1]),ftrC:'IFBW 1 kHz',traces:[{x,y:m0,c:'--t1'},{x,y:m1,c:'--t2'}],vlines:[{x:fro,c:'--t3'}],markers:[{x:fro,y:mA,c:'--t1',l:'1'},{x:fro,y:mB,c:'--t2',l:'2'}]});
+  screen($('#cvVnaP'),{xr:[x[0],x[N-1]],yr:[-90,90],ydiv:6,yfmt:t=>t.toFixed(0),legend:[['Tr3 S21 Phase |0⟩','--t1'],['Tr4 S21 Phase |1⟩','--t2']],hdrR:'°',
+    ftrL:'Start '+fmtF(x[0]),ftrR:'Stop '+fmtF(x[N-1]),traces:[{x,y:p0,c:'--t1'},{x,y:p1,c:'--t2'}],vlines:[{x:fro,c:'--t3'}],markers:[{x:fro,y:pA,c:'--t1',l:'1'},{x:fro,y:pB,c:'--t2',l:'2'}]});
+  mk($('#mkV'),[['--t1',`M1 ${fmtF(fro,5)} ${mA.toFixed(2)} dB ${pA.toFixed(1)}°`],['--t2',`M2 ${fmtF(fro,5)} ${mB.toFixed(2)} dB ${pB.toFixed(1)}°`],['--t3',`Δφ = ${Math.abs(pA-pB).toFixed(1)}° · |ΔS21| = ${dIQ.toFixed(3)}`]]);
+  const kap=fr*1e9/QL;
+  rows(o,[['Q<sub>L</sub>',sig(QL,4)],['κ/2π',si(kap,'Hz')],['2χ/2π',si(2*Math.abs(chi)*1e9,'Hz')],['2χ/κ',sig(2*Math.abs(chi)*1e9/kap),Math.abs(2*Math.abs(chi)*1e9/kap-1)<0.3?'good':''],
+    [L('Okuma noktasında |ΔS21| (IQ ayrışması)','|ΔS21| at the readout point (IQ separation)'),dIQ.toFixed(3)],[L('Not','Note'),L('|ΔS21| en büyük: ton ortada ve χ ≈ κ/2','|ΔS21| peaks with the tone centred and χ ≈ κ/2')]]);
+}
+bind(['vFr','vQi','vQe','vChi','vSpan','vRo'],vna); onSec('vna',vna);
+$('#vTs').addEventListener('click',()=>{
+  if(!vnaData) return; const {fr,QL,Qe,f0}=vnaData, span=v('vSpan')/1e3; let s='! Quantum Bench (Doruk Yildon) - hanger resonator, qubit |0>\n! f_r='+f0.toFixed(6)+' GHz, QL='+QL.toFixed(0)+', Qe='+Qe+'\n# GHz S RI R 50\n';
+  for(let i=0;i<201;i++){const f=fr-span/2+span*i/200, a=hanger(f,f0,QL,Qe), s11=[a[0]-1,a[1]]; s+=[f.toFixed(6),s11[0].toExponential(6),s11[1].toExponential(6),a[0].toExponential(6),a[1].toExponential(6),a[0].toExponential(6),a[1].toExponential(6),s11[0].toExponential(6),s11[1].toExponential(6)].join(' ')+'\n';}
+  const msg=$('#vTsMsg');
+  const fallback=()=>{msg.innerHTML=`${L('Panoya erişilemedi; metni seçip kopyalayın:','Clipboard unavailable; select and copy:')}<textarea style="width:100%;height:120px;margin-top:6px;font:11px var(--f-mono);background:var(--screen);color:var(--t1);border:1px solid var(--line)">${esc(s)}</textarea>`; const ta=msg.querySelector('textarea'); ta.focus(); ta.select();};
+  try{ navigator.clipboard.writeText(s).then(()=>{msg.textContent=L('201 nokta .s2p panoya kopyalandı.','201-point .s2p copied to clipboard.');},fallback); }catch(e){fallback();}
+});
+let kappa=NaN;
+function reson(){
+  const f=v('rF')*1e9, er=v('rEr'), Qi=v('rQi'), Qe=v('rQe'), o=$('#oR');
+  if(!(f>0&&er>=1&&Qi>0&&Qe>0)){kappa=NaN; disp(); return err(o,L('f > 0, ε_r ≥ 1, Q > 0','need f > 0, ε_r ≥ 1, Q > 0'));}
+  const ee=(er+1)/2, L4=K.c/(4*f*Math.sqrt(ee)), QL=1/(1/Qi+1/Qe); kappa=TAU*f/QL;
+  rows(o,[[L('λ/4 uzunluğu','λ/4 length'),si(L4,'m')],['Q<sub>L</sub>',sig(QL,4)],['κ/2π',si(f/QL,'Hz')],[L('Foton ömrü 1/κ','Photon lifetime 1/κ'),si(1/kappa,'s')]]);
+  disp();
+}
+let lastChi=NaN;
+function disp(){
+  const fq=v('dFq')*1e3, fr=v('dFr')*1e3, a=v('dA'), g=v('dG'), o=$('#oD');
+  if(!(g>0)||!isFinite(fq+fr+a)) return err(o,L('g > 0 olmalı','g must be > 0'));
+  const D=fq-fr; if(Math.abs(D)<1e-9||Math.abs(D+a)<1e-9) return err(o,L('rezonans: formül tekil','resonance: formula singular'));
+  const chi=g*g/D*a/(D+a), T1p=isFinite(kappa)?(D/g)**2/kappa:NaN, ratio=g/Math.abs(D); lastChi=chi;
+  rows(o,[['Δ/2π',si(D*1e6,'Hz',4)],['χ/2π',si(chi*1e6,'Hz')],['g/|Δ|',sig(ratio),ratio>0.1?'warn':'good'],['n<sub>crit</sub>',sig(D*D/(4*g*g))],[L('T<sub>1,Purcell</sub> (filtresiz)','T<sub>1,Purcell</sub> (no filter)'),si(T1p,'s'),T1p<1e-4?'warn':'']]);
+}
+bind(['rF','rEr','rQi','rQe'],reson); bind(['dFq','dFr','dA','dG'],disp);
+$('#dPush').addEventListener('click',()=>{ if(isFinite(lastChi)){ $('#vChi').value=+lastChi.toFixed(4); $('#vFr').value=v('dFr'); vna(); location.hash='vna'; window.scrollTo(0,0);} });
+
+/* ================= 05 Smith ================= */
+let smSeed=11;
+function smith(){
+  const Qi=v('sQi'), Qe=v('sQe'), sn=v('sN'), Np=Math.max(21,Math.min(2001,Math.round(v('sP')))); $('#sNv').textContent=sn.toFixed(3);
+  if(!(Qi>0&&Qe>0)) return;
+  const fr=6.5, QL=1/(1/Qi+1/Qe), rnd=gaussFrom(mulberry(smSeed)), pts=[];
+  for(let i=0;i<Np;i++){const f=fr*(1+(i/(Np-1)-.5)*8/QL), x=2*QL*(f-fr)/fr, a=2*QL/Qe, d=1+x*x; pts.push({f,re:1-a/d+sn*rnd(),im:a*x/d+sn*rnd()});}
+  // Kasa circle fit
+  let Sxx=0,Sxy=0,Syy=0,Sx=0,Sy=0,Sz=0,Sxz=0,Syz=0,n=pts.length;
+  pts.forEach(p=>{const z=p.re*p.re+p.im*p.im; Sxx+=p.re*p.re; Sxy+=p.re*p.im; Syy+=p.im*p.im; Sx+=p.re; Sy+=p.im; Sz+=z; Sxz+=p.re*z; Syz+=p.im*z;});
+  const A=[[Sxx,Sxy,Sx],[Sxy,Syy,Sy],[Sx,Sy,n]], bb=[-Sxz,-Syz,-Sz];
+  const det=M=>M[0][0]*(M[1][1]*M[2][2]-M[1][2]*M[2][1])-M[0][1]*(M[1][0]*M[2][2]-M[1][2]*M[2][0])+M[0][2]*(M[1][0]*M[2][1]-M[1][1]*M[2][0]);
+  const D0=det(A), sol=[0,1,2].map(k=>det(A.map((r,i)=>r.map((c,j)=>j===k?bb[i]:c)))/D0);
+  const cx=-sol[0]/2, cy=-sol[1]/2, r=Math.sqrt(Math.max(0,cx*cx+cy*cy-sol[2]));
+  const phOff=Math.atan2(0-cy,1-cx); let sx=0,sy=0,sxx=0,sxy=0,m=0;
+  pts.forEach(p=>{let ps=Math.atan2(p.im-cy,p.re-cx)-phOff; ps=((ps%TAU)+TAU)%TAU; const xx=Math.tan((Math.PI-ps)/2); if(Math.abs(xx)<4){sx+=p.f; sy+=xx; sxx+=p.f*p.f; sxy+=p.f*xx; m++;}});
+  const slope=(m*sxy-sx*sy)/(m*sxx-sx*sx), icpt=(sy-slope*sx)/m, QLf=-icpt/2, frf=-icpt/slope, Qef=QLf/r, Qif=1/(1/QLf-1/Qef);
+  // draw
+  const P=prep($('#cvSmith')); if(!P) return; const {g,W,H}=P; g.fillStyle=css('--screen'); g.fillRect(0,0,W,H);
+  const R=Math.min(W,H)/2-18, ox=W/2, oy=H/2+4, X=x=>ox+R*x, Y=y=>oy-R*y;
+  g.save(); g.beginPath(); g.arc(ox,oy,R,0,TAU); g.clip();
+  g.lineWidth=1; g.strokeStyle=css('--grat');
+  [0.2,0.5,1,2,5].forEach(rr=>{g.beginPath(); g.arc(X(rr/(1+rr)),oy,R/(1+rr),0,TAU); g.stroke();});
+  [0.2,0.5,1,2,5].forEach(xx=>[1,-1].forEach(sg=>{g.beginPath(); g.arc(X(1),Y(sg/xx),R/xx,0,TAU); g.stroke();}));
+  g.strokeStyle=css('--grat-hi'); g.beginPath(); g.moveTo(ox-R,oy); g.lineTo(ox+R,oy); g.stroke();
+  g.restore();
+  g.strokeStyle=css('--muted'); g.lineWidth=1.2; g.beginPath(); g.arc(ox,oy,R,0,TAU); g.stroke();
+  g.fillStyle=css('--t1'); g.globalAlpha=.75; pts.forEach(p=>{g.beginPath(); g.arc(X(p.re),Y(p.im),1.8,0,TAU); g.fill();}); g.globalAlpha=1;
+  g.strokeStyle=css('--t2'); g.lineWidth=1.8; g.beginPath(); g.arc(X(cx),Y(cy),R*r,0,TAU); g.stroke();
+  const rp=[cx-r*Math.cos(phOff),cy-r*Math.sin(phOff)]; g.fillStyle=css('--t3'); g.beginPath(); g.arc(X(rp[0]),Y(rp[1]),4.5,0,TAU); g.fill();
+  g.fillStyle=css('--fg'); g.beginPath(); g.arc(ox,oy,2.5,0,TAU); g.fill();
+  g.font='10.5px '+css('--f-mono'); g.textAlign='left'; g.fillStyle=css('--t1'); g.fillText('Tr1 S11 Smith',10,14); g.fillStyle=css('--t2'); g.fillText(L('çember uydurma','circle fit'),110,14);
+  g.fillStyle=css('--muted'); g.textAlign='right'; g.fillText('Z₀ = 50 Ω',W-10,14);
+  const regime=Qe<Qi*0.97?L('aşırı kuplajlı (çember merkezi içine alır)','overcoupled (circle encloses the centre)'):Qe>Qi*1.03?L('az kuplajlı','undercoupled'):L('kritik kuplaj (merkezden geçer)','critically coupled (passes through the centre)');
+  mk($('#mkS'),[['--t1',`${L('ölçüm','meas')}: ${Np} pts, σ = ${sn.toFixed(3)}`],['--t2',`${L('çap','diameter')} 2r = ${(2*r).toFixed(3)}`],['--t3',`f_r ${L('uydurma','fit')} = ${frf.toFixed(6)} GHz`]]);
+  thead($('#smH'),['',L('Gerçek','True'),L('Uydurma','Fit'),L('Hata','Error')]);
+  const rowE=(n,t,f)=>`<tr><td>${n}</td><td class="n">${sig(t,4)}</td><td class="n">${sig(f,4)}</td><td class="n">${sig((f/t-1)*100,2)} %</td></tr>`;
+  $('#smT').innerHTML=rowE('Q<sub>L</sub>',QL,QLf)+rowE('Q<sub>e</sub>',Qe,Qef)+rowE('Q<sub>i</sub>',Qi,Qif)+`<tr><td>${L('Rejim','Regime')}</td><td colspan="3">${regime}</td></tr>`;
+}
+bind(['sQi','sQe','sN','sP'],smith); onSec('smith',smith);
+$('#sNew').addEventListener('click',()=>{smSeed++; smith();});
+$$('[data-cpl]').forEach(b=>b.addEventListener('click',()=>{const k=b.dataset.cpl, Qi=v('sQi'); $('#sQe').value=k==='under'?Qi*4:k==='crit'?Qi:Qi/4; smith();}));
+
+/* ================= 06 punch-out & spectroscopy ================= */
+function punch(){
+  const fr=v('poFr'), fq=v('poFq'), g=v('poG'), Qe=v('poQe'), Qi=3e5;
+  if(!(fr>0&&g>0&&Qe>0)||fq===fr) return;
+  const QL=1/(1/Qi+1/Qe), D=(fq-fr)*1e3, s0=-g*g/D, ncrit=D*D/(4*g*g), npo=10*ncrit, w=TAU*fr*1e9, kap=fr*1e3/QL; // MHz
+  const nOf=PdBm=>2*QL*QL*1e-3*10**(PdBm/10)/(Qe*K.hb*w*w);
+  const lo=Math.min(0,s0)-6*kap, hi=Math.max(0,s0)+6*kap, Pmin=-150, Pmax=-70, nx=240, ny=120;
+  const off=document.createElement('canvas'); off.width=nx; off.height=ny; const og=off.getContext('2d'), img=og.createImageData(nx,ny);
+  let maxD=0; const vals=new Float32Array(nx*ny);
+  for(let j=0;j<ny;j++){const P=Pmax-(Pmax-Pmin)*j/(ny-1), n=nOf(P), fres=fr*1e3+s0/(1+n/npo);
+    for(let i=0;i<nx;i++){const f=fr*1e3+lo+(hi-lo)*i/(nx-1), a=hanger(f,fres,QL,Qe), d=-20*Math.log10(Math.hypot(...a)); vals[j*nx+i]=d; if(d>maxD) maxD=d;}}
+  for(let k=0;k<nx*ny;k++){const c=cmap(vals[k]/maxD); img.data[4*k]=c[0]; img.data[4*k+1]=c[1]; img.data[4*k+2]=c[2]; img.data[4*k+3]=255;}
+  og.putImageData(img,0,0);
+  const Ppo=10*Math.log10(npo*Qe*K.hb*w*w/(2*QL*QL)/1e-3);
+  screen($('#cvPunch'),{xr:[lo,hi],yr:[Pmin,Pmax],ydiv:8,yfmt:t=>t.toFixed(0),legend:[['|S21| '+L('derinliği','depth'),'--t1']],hdrR:L('P_çip (dBm)','P_chip (dBm)'),
+    ftrL:'f − f_r: '+lo.toFixed(1)+' MHz',ftrR:'+'+hi.toFixed(1)+' MHz',
+    pre:(gg,X,Y,m,pw,ph)=>{gg.imageSmoothingEnabled=true; gg.drawImage(off,m.l,m.t,pw,ph);},
+    hlines:[{y:Ppo,c:'--fg'}],vlines:[{x:0,c:'--t2'},{x:s0,c:'--t3'}]});
+  mk($('#mkPo'),[['--t3',`${L('düşük güç','low power')}: f_r + ${s0.toFixed(2)} MHz`],['--t2',`${L('yüksek güç','high power')}: f_r ${L('(çıplak)','(bare)')}`],['--fg',`${L('geçiş','transition')} ≈ ${Ppo.toFixed(0)} dBm (${sig(npo)} ${L('foton','photons')})`]]);
+}
+bind(['poFr','poFq','poG','poQe'],punch); onSec('spektroskopi',punch);
+function spec(){
+  const T1=v('spT1')*1e-6, T2=v('spT2')*1e-6, Om=TAU*v('spO')*1e6, span=v('spSpan'); $('#spOv').textContent=v('spO').toFixed(3)+' MHz';
+  if(!(T1>0&&T2>0&&span>0)) return;
+  const pe=(O,dMHz)=>{const d=TAU*dMHz*1e6; return 0.5*O*O*T1*T2/(1+d*d*T2*T2+O*O*T1*T2);};
+  const x=[],y1=[],y2=[]; for(let i=0;i<=600;i++){const d=-span/2+span*i/600; x.push(d); y1.push(pe(Om,d)); y2.push(pe(3*Om,d));}
+  const fw=O=>Math.sqrt(1+O*O*T1*T2)/(Math.PI*T2);
+  screen($('#cvSpec'),{xr:[-span/2,span/2],yr:[0,0.5],ydiv:5,yfmt:t=>t.toFixed(2),legend:[['P₁ · Ω','--t1'],['P₁ · 3Ω','--t3']],hdrR:L('qubit popülasyonu','qubit population'),
+    ftrL:'f₀₁ − '+(span/2)+' MHz',ftrR:'f₀₁ + '+(span/2)+' MHz',traces:[{x,y:y1,c:'--t1'},{x,y:y2,c:'--t3'}],markers:[{x:0,y:pe(Om,0),c:'--t1',l:'1'}]});
+  mk($('#mkSp'),[['--t1',`FWHM(Ω) = ${si(fw(Om),'Hz')}`],['--t3',`FWHM(3Ω) = ${si(fw(3*Om),'Hz')}`],['--muted',`${L('T₂ sınırı','T₂ limit')} 1/(πT₂) = ${si(1/(Math.PI*T2),'Hz')}${T2>2*T1?' · T₂ > 2T₁ !':''}`]]);
+}
+bind(['spT1','spT2','spO','spSpan'],spec); onSec('spektroskopi',spec);
+
+/* ================= 07 spectrum analyser ================= */
+function sa(){
+  const fq=v('saFq'), a=v('saA')/1e3, IF=v('saIF')/1e3, sb=+$('#saSB').value, P=v('saP'), LOs=v('saLO'), ge=v('saG'), pe=v('saPh'), rbw=v('saRbw')*1e3, o=$('#oSa');
+  if(![fq,a,IF,P,LOs,ge,pe].every(isFinite)||!(rbw>0)) return err(o,L('sayı girin','enter numbers'));
+  const gg=10**(ge/20), ph=pe*Math.PI/180, den=1-2*gg*Math.cos(ph)+gg*gg, irr=den>1e-15?db((1+2*gg*Math.cos(ph)+gg*gg)/den):200;
+  const LO=fq-sb*IF, IM=LO-sb*IF, f12=fq+a;
+  const span=Math.max(4*Math.abs(IF),2*Math.abs(a)+2*Math.abs(IF))*1.25, c=(Math.min(LO,IM,fq,f12)+Math.max(LO,IM,fq,f12))/2, x0=c-span/2, x1=c+span/2;
+  const N=1601, bin=span*1e9/(N-1), sd=Math.max(rbw/2.355,bin*0.9), floor=-150+10*Math.log10(rbw);
+  const tones=[[fq,P],[LO,P-LOs],[IM,P-irr]], x=[], y=[], rnd=gaussFrom(mulberry(5));
+  for(let i=0;i<N;i++){const f=x0+span*i/(N-1); x.push(f); let mw=10**((floor+1.5*rnd())/10); tones.forEach(([ft,pt])=>{const d=(f-ft)*1e9; mw+=10**(pt/10)*Math.exp(-d*d/(2*sd*sd));}); y.push(10*Math.log10(mw));}
+  const ref=Math.ceil((P+10)/10)*10;
+  screen($('#cvSa'),{xr:[x0,x1],yr:[ref-100,ref],ydiv:10,ystep:2,yfmt:t=>t.toFixed(0),legend:[['Tr1 Clr/Wr','--t1']],hdrR:'Ref '+ref+' dBm · 10 dB/',
+    ftrL:'Center '+fmtF(c,4),ftrC:'RBW '+si(rbw,'Hz'),ftrR:'Span '+si(span*1e9,'Hz'),traces:[{x,y,c:'--t1',w:1.2}],
+    vlines:[{x:f12,c:'--t3'}],markers:[{x:fq,y:P,c:'--t1',l:'1'},{x:LO,y:P-LOs,c:'--t2',l:'2'},{x:IM,y:P-irr,c:'--t3',l:'3'}]});
+  mk($('#mkSa'),[['--t1',`M1 f₀₁ ${fmtF(fq,4)} ${P.toFixed(1)} dBm`],['--t2',`M2 LO ${fmtF(LO,4)} ${(P-LOs).toFixed(1)} dBm`],['--t3',`M3 ${L('imaj','image')} ${fmtF(IM,4)} ${(P-irr).toFixed(1)} dBm`],['--t3',`f₁₂ ${fmtF(f12,4)} (${L('kesikli','dashed')})`]]);
+  const near=(fx,lab)=>{const d=Math.min(Math.abs(fx-fq),Math.abs(fx-f12)); return [lab,si(d*1e9,'Hz'),d<0.02?'bad':d<0.1?'warn':'good'];};
+  rows(o,[[L('İmaj bastırma (IRR)','Image rejection (IRR)'),sig(irr,3)+' dBc',irr<40?'warn':'good'],near(IM,L('İmajın f₀₁/f₁₂\'ye uzaklığı','Image distance to f₀₁/f₁₂')),near(LO,L('LO\'nun f₀₁/f₁₂\'ye uzaklığı','LO distance to f₀₁/f₁₂')),[L('Gürültü tabanı','Noise floor'),floor.toFixed(0)+' dBm ('+L('DANL −150 dBm/Hz varsayıldı','DANL −150 dBm/Hz assumed')+')']]);
+}
+bind(['saFq','saA','saIF','saSB','saP','saLO','saG','saPh','saRbw'],sa); onSec('spektrum',sa);
+
+/* ================= 08 scope ================= */
+function scope(){
+  const tg=v('gT'), k=v('gK'), b=v('gB'), a=TAU*v('gA')*1e6, IF=v('gIF')*1e6, o=$('#oG'); $('#gBv').textContent=b.toFixed(2);
+  if(!(tg>0&&k>0)||!isFinite(a)||a===0||!isFinite(IF)) return err(o,L('t_g, k > 0, α ≠ 0','need t_g, k > 0, α ≠ 0'));
+  const sg=tg/k, N=600, G=t=>Math.exp(-((t-tg/2)**2)/(2*sg*sg)), g0=G(0), pad=tg*0.15, tt=[],I=[],Q=[],RF=[];
+  let area=0; const dt=tg/N*1e-9; for(let i=0;i<=N;i++){const t=i/N*tg; area+=(G(t)-g0)*dt*(i===0||i===N?.5:1);}
+  const A=Math.PI/area; let peakI=0, peakQ=0;
+  for(let i=0;i<=N;i++){const t=-pad+(tg+2*pad)*i/N; tt.push(t); const on=t>=0&&t<=tg; const ix=on?A*(G(t)-g0):0, dg=on?-(t-tg/2)/(sg*sg)*G(t)*1e9:0, qy=on?-b*A*dg/a:0; I.push(ix); Q.push(qy); peakI=Math.max(peakI,Math.abs(ix)); peakQ=Math.max(peakQ,Math.abs(qy));}
+  const nrm=Math.max(peakI,peakQ)||1;
+  for(let i=0;i<=N;i++){const ph=TAU*IF*tt[i]*1e-9; RF.push((I[i]*Math.cos(ph)-Q[i]*Math.sin(ph))/nrm);}
+  screen($('#cvScope'),{xr:[-pad,tg+pad],yr:[-1.2,1.2],ydiv:8,yfmt:t=>t.toFixed(1),legend:[['CH1 I','--t1'],['CH2 Q (DRAG)','--t2'],['CH3 RF @ IF','--t3']],hdrR:L('normalize','normalised'),
+    ftrL:L('zaman','time')+' '+si((tg+2*pad)/10*1e-9,'s')+'/div',ftrR:'IF '+si(IF,'Hz'),traces:[{x:tt,y:RF,c:'--t3',w:1.1},{x:tt,y:I.map(z=>z/nrm),c:'--t1',w:2},{x:tt,y:Q.map(z=>z/nrm),c:'--t2',w:2}]});
+  // spectral weight of Ωx at |α|
+  let re0=0,reA=0,imA=0; const fa=Math.abs(a)/TAU;
+  for(let i=0;i<=N;i++){const t=i/N*tg*1e-9, x=A*(G(i/N*tg)-g0)*dt; re0+=x; reA+=x*Math.cos(TAU*fa*t); imA+=x*Math.sin(TAU*fa*t);}
+  const sx=Math.hypot(reA,imA)/Math.abs(re0), leak=20*Math.log10(Math.max(1e-12,sx*Math.abs(1-b))), leak0=20*Math.log10(Math.max(1e-12,sx));
+  mk($('#mkSc'),[['--t1',`I ${L('tepe','peak')} Ω/2π = ${si(peakI/TAU,'Hz')}`],['--t2',`Q ${L('tepe','peak')} Ω/2π = ${si(peakQ/TAU,'Hz')}`],['--t3',`f₁₂ ${L('spektral ağırlık','spectral weight')}: ${leak.toFixed(1)} dB`]]);
+  rows(o,[[L('f₁₂\'deki spektral ağırlık, DRAG\'sız','Spectral weight at f₁₂, no DRAG'),leak0.toFixed(1)+' dB'],[L('f₁₂\'deki spektral ağırlık, β ile','Spectral weight at f₁₂, with β'),leak.toFixed(1)+' dB',leak<leak0-10?'good':''],
+    [L('Gauss spektral σ<sub>f</sub>','Gaussian spectral σ<sub>f</sub>'),si(1/(TAU*sg*1e-9),'Hz')],[L('Yorum','Reading'),L('β = 1 birinci dereceden sızıntıyı sıfırlar','β = 1 nulls first-order leakage')]]);
+}
+bind(['gT','gK','gB','gA','gIF'],scope); onSec('osiloskop',scope);
+
+/* ================= 09 cryostat ================= */
+const STG=[
+  {n:['300 K (oda)','300 K (room)'],s:'300 K',T:300,A:0,c:'—',info:['Oda sıcaklığı flanşı. AWG, LO, IQ mikser ve oda sıcaklığı LNA burada. Kablolar hermetik geçişlerden girer.','Room-temperature flange. AWG, LO, IQ mixer and the room-temperature LNA live here. Cables enter through hermetic feedthroughs.']},
+  {n:['50 K (PT 1. kademe)','50 K (PT 1st stage)'],s:'50 K',T:50,A:0,c:'~10 W',info:['Pulse-tube\'un ilk kademesi ve radyasyon kalkanı. Kablolar ilk kez burada termalize edilir; W mertebesinde ısı tolere edilir.','First pulse-tube stage and radiation shield. Cables are thermalised here for the first time; watts of heat are tolerated.']},
+  {n:['4 K (PT 2. kademe)','4 K (PT 2nd stage)'],s:'4 K',T:4,A:20,c:'~1 W',info:['HEMT yükselteç ve ilk büyük zayıflatıcı burada. Soğutma gücü yüksek olduğu için zayıflatmanın çoğu bu kademeye konur.','The HEMT amplifier and the first big attenuator sit here. With plenty of cooling power, most of the attenuation goes on this stage.']},
+  {n:['Still','Still'],s:'Still',T:0.8,A:10,c:'~10 mW',info:['He-3 buharlaşma odası, ~0.8 K. Onlarca mW soğutma; 10 dB zayıflatıcı.','The He-3 still, ~0.8 K. Tens of mW of cooling; a 10 dB attenuator.']},
+  {n:['Cold plate','Cold plate'],s:'Cold plate',T:0.1,A:10,c:'~100 µW',info:['Ara kademe, ~100 mK. Zayıflatıcılar ve bazı filtreler; soğutma gücü yüzlerce µW mertebesinde.','Intermediate stage, ~100 mK. Attenuators and some filters; cooling power of a few hundred µW.']},
+  {n:['MXC','MXC'],s:'MXC',T:0.01,A:20,c:'~10 µW @ 20 mK',info:['Karıştırma odası, ~10 mK. Çip, sirkülatörler, TWPA, IR filtreler ve son zayıflatıcı burada. Soğutma gücü µW mertebesinde.','Mixing chamber, ~10 mK. The chip, circulators, TWPA, IR filters and the last attenuator. Cooling power is in the µW range.']},
+];
+const plateY=[40,140,240,340,440,530];
+let stSel=5, attRes=[];
+function cryoSvg(){
+  let s=plateY.map((y,i)=>`<rect class="plate${stSel===i?' sel':''}" data-i="${i}" x="60" y="${y}" width="480" height="14" rx="2" tabindex="0" role="button" aria-label="${STG[i].s}"/><text x="64" y="${y-6}" class="a" style="pointer-events:none">${STG[i].s}</text>`).join('');
+  s+=`<g style="pointer-events:none"><path class="wv" d="M170 2V600"/><path class="acc" d="M430 600V2"/>`;
+  s+=STG.map((st,i)=>st.A>0?`<rect class="fillsf" x="150" y="${plateY[i]+18}" width="40" height="20" rx="2"/><text x="170" y="${plateY[i]+32}" text-anchor="middle" style="font-size:10px">−${sig(st.A)}</text>`:'').join('');
+  s+=`<text x="170" y="-4" text-anchor="middle" class="w">${L('sürüş + okuma girişi','drive + readout in')}</text><text x="430" y="-4" text-anchor="middle" class="a">${L('okuma çıkışı','readout out')}</text>
+  <circle class="fillsf" cx="430" cy="578" r="10"/><path class="thin" d="M424 574a7 7 0 1 1 0 8"/><text x="448" y="582" class="m">${L('sirkülatör','circulator')}</text>
+  <rect class="fillwv" x="412" y="548" width="36" height="16" rx="2"/><text x="430" y="560" text-anchor="middle" class="w" style="font-size:10px">TWPA</text>
+  <rect class="fillsf" x="414" y="560" width="0" height="0"/><path class="fillacc" d="M416 278h28l-14-24z"/><text x="452" y="272" class="a">HEMT</text>
+  <path class="fillacc" d="M416 34h28l-14-24z"/><text x="452" y="28" class="a">LNA</text>
+  <text x="456" y="420" class="m">NbTi</text><text x="196" y="200" class="m">CuNi</text>
+  <rect class="fillacc" x="200" y="596" width="200" height="30" rx="3"/><text x="300" y="615" text-anchor="middle">${L('çip','chip')}</text>
+  <path class="wv" d="M170 600v10h30"/><path class="acc" d="M400 610h30v-10"/></g>`;
+  $('#cryo').innerHTML=s;
+  const st=STG[stSel], r=attRes[stSel];
+  $('#stcard').innerHTML=`<div class="kicker">${L('Seçili kademe','Selected stage')}</div><h4>${st.n[LI()]}</h4><p>${st.info[LI()]}</p><dl class="out">`+
+    `<div class="row"><dt>T</dt><dd>${si(st.T,'K')}</dd></div><div class="row"><dt>${L('Soğutma gücü','Cooling power')}</dt><dd>${st.c}${stSel?DAG:''}</dd></div>`+
+    (r?`<div class="row"><dt>${L('Zayıflatıcı','Attenuator')}</dt><dd>${sig(st.A)} dB</dd></div><div class="row"><dt>${L('Çıkışta n̄','n̄ out')}</dt><dd>${sig(r.n)}</dd></div><div class="row"><dt>${L('Harcanan güç','Dissipated')}</dt><dd>${si(r.d,'W')}</dd></div>`:'')+`</dl>`;
+  $$('#attT tr').forEach((tr,i)=>tr.classList.toggle('sel',i+1===stSel));
+}
+$('#cryo').addEventListener('click',e=>{const p=e.target.closest('.plate'); if(p){stSel=+p.dataset.i; cryoSvg();}});
+$('#cryo').addEventListener('keydown',e=>{const p=e.target.closest('.plate'); if(p&&(e.key==='Enter'||e.key===' ')){e.preventDefault(); stSel=+p.dataset.i; cryoSvg(); const n=$(`#cryo .plate[data-i="${stSel}"]`); if(n) n.focus();}});
+$('#attT').innerHTML=STG.slice(1).map((s,k)=>{const i=k+1; return `<tr><td id="aL${i}"></td><td><input id="aT${i}" type="number" step="any" min="0" value="${s.T}" aria-label="T ${s.s}"></td><td><input id="aA${i}" type="number" step="any" min="0" value="${s.A}" aria-label="dB ${s.s}"></td><td class="n" id="aN${i}"></td><td class="n" id="aE${i}"></td><td class="n" id="aD${i}"></td><td class="n">${s.c}${DAG}</td></tr>`;}).join('');
+function att(){
+  thead($('#attH'),[L('Kademe','Stage'),'T (K)',L('Zayıflatıcı (dB)','Attenuator (dB)'),'n̄ out','T<sub>eff</sub>',L('Harcanan','Dissipated'),L('Soğutma','Cooling')]);
+  for(let i=1;i<STG.length;i++) $('#aL'+i).textContent=STG[i].n[LI()];
+  const f=v('aF')*1e9, P0=1e-3*10**(v('aP')/10), o=$('#oA');
+  if(!(f>0)) return err(o,L('f > 0 olmalı','f must be > 0'));
+  let n=nth(f,300), P=P0, tot=0; attRes=[{n,d:0}];
+  for(let i=1;i<STG.length;i++){const s=STG[i], T=v('aT'+i), Adb=v('aA'+i); s.A=isFinite(Adb)?Adb:0; s.T=isFinite(T)?T:s.T;
+    const A=10**(s.A/10); n=n/A+(1-1/A)*nth(f,s.T); const d=P*(1-1/A); P/=A; tot+=s.A; attRes[i]={n,d};
+    $('#aN'+i).textContent=sig(n); $('#aE'+i).textContent=si(n>0?K.h*f/(K.kB*Math.log(1+1/n)):0,'K'); $('#aD'+i).textContent=si(d,'W');}
+  cryoSvg();
+  rows(o,[[L('Toplam zayıflatma','Total attenuation'),sig(tot)+' dB'],[L('Çipe ulaşan gürültü n̄','Noise at the chip n̄'),sig(n),n>1e-3?'warn':'good'],[L('Çipe ulaşan sürüş gücü','Drive power at the chip'),sig(db(P/1e-3),4)+' dBm'],[L('Foton akısı','Photon flux'),sig(P/(K.h*f)*1e-6,3)+L(' foton/µs',' photons/µs')]]);
+}
+bind(['aF','aP',...STG.slice(1).flatMap((_,k)=>['aT'+(k+1),'aA'+(k+1)])],att);
+
+/* ================= 10 readout chain ================= */
+const RD=[
+  {n:['Sirkülatör ×2 (MXC)','Circulator ×2 (MXC)'],t:0,g:0.6,T:0.01},
+  {n:['TWPA (MXC)','TWPA (MXC)'],t:1,g:20,T:0.25,tw:1},
+  {n:['İzolatör ×2 (MXC)','Isolator ×2 (MXC)'],t:0,g:0.6,T:0.01},
+  {n:['NbTi koaks → 4 K','NbTi coax → 4 K'],t:0,g:0.5,T:1},
+  {n:['HEMT (4 K)','HEMT (4 K)'],t:1,g:40,T:2},
+  {n:['Koaks 4 K → 300 K','Coax 4 K → 300 K'],t:0,g:3,T:150},
+  {n:['LNA (300 K)','LNA (300 K)'],t:1,g:35,T:50},
+];
+$('#rdT').innerHTML=RD.map((r,i)=>`<tr id="rdR${i}"><td id="rN${i}"></td><td id="rY${i}"></td><td><input id="rG${i}" type="number" step="any" value="${r.g}" aria-label="dB"></td><td><input id="rT${i}" type="number" step="any" min="0" value="${r.T}" aria-label="K"></td><td class="n" id="rCG${i}"></td><td class="n" id="rC${i}"></td><td class="n" id="rNF${i}"></td></tr>`).join('');
+function chain(){
+  thead($('#rdH'),[L('Eleman','Element'),L('Tür','Type'),'G / L (dB)','T<sub>e</sub> / T<sub>fiz</sub> (K)'.replace('fiz',L('fiz','phys')),L('Σ Kazanç','Σ Gain'),'Σ T<sub>sys</sub>','Σ NF']);
+  const f=v('nF')*1e9, tw=$('#nTw').checked, o=$('#oN');
+  RD.forEach((r,i)=>{ $('#rN'+i).textContent=r.n[LI()]; $('#rY'+i).innerHTML=(r.t?L('yükselteç','amplifier'):L('kayıp','loss'))+(r.t?DAG:''); });
+  if(!(f>0)) return err(o,L('f > 0 olmalı','f must be > 0'));
+  let T=0,G=1;
+  RD.forEach((r,i)=>{ const off=r.tw&&!tw; $('#rdR'+i).style.opacity=off?.4:1;
+    if(off){['rCG','rC','rNF'].forEach(p=>$('#'+p+i).textContent='—'); return;}
+    const x=v('rG'+i), Tp=v('rT'+i); let Gi,Te; if(!r.t){const Ls=10**(x/10); Gi=1/Ls; Te=(Ls-1)*Tp;} else {Gi=10**(x/10); Te=Tp;}
+    T+=Te/G; G*=Gi; $('#rCG'+i).textContent=db(G).toFixed(1)+' dB'; $('#rC'+i).textContent=sig(T,4)+' K'; $('#rNF'+i).textContent=db(1+T/290).toFixed(3)+' dB'; });
+  const TQ=K.h*f/(2*K.kB), eta=TQ/(TQ+T);
+  rows(o,[['T<sub>sys</sub>',si(T,'K',4)],['T<sub>QL</sub> = hf/2k<sub>B</sub>',si(TQ,'K')],['T<sub>sys</sub>/T<sub>QL</sub>',sig(T/TQ)],['η ≈ T<sub>QL</sub>/(T<sub>QL</sub>+T<sub>sys</sub>)',sig(eta),eta<0.1?'warn':'good']]);
+}
+bind(['nF','nTw',...RD.flatMap((_,i)=>['rG'+i,'rT'+i])],chain);
+function iq(){
+  const d=v('qD'), tr=v('qT'); $('#qDv').textContent=d.toFixed(1); $('#qTv').textContent=tr.toFixed(3);
+  const rnd=mulberry(7), gs=gaussFrom(rnd), N=600, c0=-d/2, c1=d/2, x0=[],y0=[],x1=[],y1=[]; let e0=0,e1=0;
+  for(let i=0;i<N;i++){const x=c0+gs(); x0.push(x); y0.push(gs()); if(x>0)e0++;}
+  for(let i=0;i<N;i++){let cx=c1; const td=-Math.log(1-rnd()); if(td<tr) cx=c0+(c1-c0)*(td/tr); const x=cx+gs(); x1.push(x); y1.push(gs()); if(x<0)e1++;}
+  const Lm=Math.max(d/2+4,5), Fan=1-0.5*erfc(d/(2*Math.SQRT2)), Fs=1-(e0+e1)/(2*N);
+  screen($('#cvIQ'),{xr:[-Lm,Lm],yr:[-Lm*0.7,Lm*0.7],ydiv:8,yfmt:t=>t.toFixed(1),legend:[['|0⟩','--t2'],['|1⟩','--t1']],hdrR:'I / Q (σ)',ftrC:L('eşik: I = 0','threshold: I = 0'),
+    traces:[{x:x0,y:y0,c:'--t2',dots:1},{x:x1,y:y1,c:'--t1',dots:1}],vlines:[{x:0,c:'--fg'}]});
+  const nb=60,h0=new Array(nb).fill(0),h1=new Array(nb).fill(0),bw=2*Lm/nb;
+  x0.forEach(x=>{const k=Math.floor((x+Lm)/bw); if(k>=0&&k<nb)h0[k]++;}); x1.forEach(x=>{const k=Math.floor((x+Lm)/bw); if(k>=0&&k<nb)h1[k]++;});
+  const xs=h0.map((_,i)=>-Lm+(i+.5)*bw), mx=Math.max(...h0,...h1)*1.1;
+  screen($('#cvHist'),{xr:[-Lm,Lm],yr:[0,mx],ydiv:4,yfmt:t=>t.toFixed(0),legend:[[L('histogram','histogram'),'--muted']],traces:[{x:xs,y:h0,c:'--t2'},{x:xs,y:h1,c:'--t1'}],vlines:[{x:0,c:'--fg'}]});
+  mk($('#mkQ'),[['--fg',`F ${L('analitik','analytic')} ${(Fan*100).toFixed(2)} %`],['--t1',`F ${L('simüle','simulated')} ${(Fs*100).toFixed(2)} %`],['--t2',`P(1|0) ${(e0/N*100).toFixed(2)} %`],['--t1',`P(0|1) ${(e1/N*100).toFixed(2)} %`]]);
+}
+bind(['qD','qT'],iq); onSec('okuma',iq);
+
+/* ================= 11 multiplexing ================= */
+function mux(){
+  const N=Math.max(1,Math.min(16,Math.round(v('mxN')))), F=v('mxF'), S=v('mxS')/1e3, Qe=v('mxQe'), Qi=v('mxQi'), BW=v('mxBw'), o=$('#oMx');
+  if(!(F>0&&S>0&&Qe>0&&Qi>0&&BW>0)) return err(o,L('değerler > 0 olmalı','values must be > 0'));
+  const QL=1/(1/Qi+1/Qe), frs=[...Array(N).keys()].map(k=>F+k*S), x0=F-S, x1=F+(N)*S, M=3000, x=[], y=[];
+  for(let i=0;i<M;i++){const f=x0+(x1-x0)*i/(M-1); let re=1,im=0; frs.forEach(fr=>{const a=hanger(f,fr,QL,Qe), r=re*a[0]-im*a[1]; im=re*a[1]+im*a[0]; re=r;}); x.push(f); y.push(20*Math.log10(Math.hypot(re,im)));}
+  const dep=Math.min(...y);
+  screen($('#cvMux'),{xr:[x0,x1],yr:[Math.floor(dep/5)*5-5,2],ydiv:8,yfmt:t=>t.toFixed(0),legend:[['Tr1 S21 LogM','--t1']],hdrR:'dB',ftrL:'Start '+fmtF(x0,3),ftrR:'Stop '+fmtF(x1,3),
+    traces:[{x,y,c:'--t1',w:1.3}],markers:frs.map((fr,k)=>({x:fr,y:20*Math.log10(Math.abs(1-QL/Qe)),c:'--t2',l:String(k+1)}))});
+  const kap=F*1e9/QL, sep=S*1e9/kap, Lz=1/(1+(2*QL*S/F)**2), center=(frs[0]+frs[N-1])/2, ifMax=(frs[N-1]-frs[0])/2*1e3, nAdc=Math.ceil((frs[N-1]-frs[0])*1e3/(2*BW)+1e-9)||1;
+  mk($('#mkMx'),[['--t2',`${N} ${L('rezonatör','resonators')} · ${si(S*1e9,'Hz')} ${L('aralık','spacing')}`],['--t1',`κ/2π ≈ ${si(kap,'Hz')}`],['--muted',`LO = ${fmtF(center,4)}`]]);
+  rows(o,[['κ/2π',si(kap,'Hz')],[L('Aralık / κ','Spacing / κ'),sig(sep),sep<10?'warn':'good'],[L('Komşu kanal Lorentz bastırması','Adjacent-channel Lorentzian rejection'),db(Lz).toFixed(1)+' dB',db(Lz)>-30?'warn':'good'],
+    [L('IF aralığı (tek LO, bant ortası)','IF range (single LO, band centre)'),'± '+ifMax.toFixed(0)+' MHz'],[L('Gereken ADC kanalı','ADC channels needed'),String(nAdc),nAdc>1?'warn':'good']]);
+}
+bind(['mxN','mxF','mxS','mxQe','mxQi','mxBw'],mux); onSec('coklama',mux);
+
+/* ================= 12 decoherence ================= */
+bind(['uF','uT1','uTp'],()=>{
+  const f=v('uF')*1e9, T1=v('uT1')*1e-6, Tp=v('uTp')*1e-6, o=$('#oU');
+  if(!(f>0&&T1>0&&Tp>0)) return err(o,L('değerler > 0','values > 0'));
+  const T2=1/(1/(2*T1)+1/Tp);
+  rows(o,[['Q = 2πf·T<sub>1</sub>',sig(TAU*f*T1)],['Γ<sub>1</sub>/2π',si(1/(TAU*T1),'Hz')],['T<sub>2</sub>',si(T2,'s')],[L('20 ns kapı başına hata ≈','Error per 20 ns gate ≈'),sig(20e-9/(3*T1)+20e-9/(3*Tp))]]);
+});
+bind(['wC','wK','wN'],()=>{
+  const chi=TAU*v('wC')*1e6, kap=TAU*v('wK')*1e6, n=v('wN'), o=$('#oW');
+  if(!(chi>=0&&kap>0&&n>=0)) return err(o,L('χ ≥ 0, κ > 0, n̄ ≥ 0','need χ ≥ 0, κ > 0, n̄ ≥ 0'));
+  const G=4*chi*chi*kap*n/(kap*kap+4*chi*chi);
+  rows(o,[['Γ<sub>φ</sub>',si(G,'s⁻¹')],[L('T<sub>φ</sub> sınırı','T<sub>φ</sub> limit'),si(1/G,'s'),1/G<1e-3?'warn':'good']]);
+});
+function ramsey(){
+  const T2s=v('rmT2s'), T2e=v('rmT2e'), d=v('rmD'), X=v('rmX'); if(!(T2s>0&&T2e>0&&X>0&&isFinite(d))) return;
+  const xs=[],r=[],e=[]; for(let i=0;i<=800;i++){const t=i/800*X; xs.push(t); r.push(0.5*(1-Math.exp(-t/T2s)*Math.cos(TAU*d*t))); e.push(0.5*(1-Math.exp(-t/T2e)));}
+  screen($('#cvRam'),{xr:[0,X],yr:[0,1],ydiv:4,yfmt:t=>t.toFixed(2),legend:[['Ramsey','--t2'],[L('Echo zarfı','Echo envelope'),'--t1']],hdrR:'P(|1⟩)',ftrL:'0 µs',ftrR:X+' µs',traces:[{x:xs,y:r,c:'--t2',w:1.3},{x:xs,y:e,c:'--t1',w:2}],markers:[{x:T2s,y:0.5*(1-Math.exp(-1)),c:'--t2',l:'T₂*'},{x:Math.min(T2e,X),y:0.5*(1-Math.exp(-Math.min(T2e,X)/T2e)),c:'--t1',l:'T₂E'}]});
+  mk($('#mkRm'),[['--t2','T₂* = '+T2s+' µs · δ = '+d+' MHz'],['--t1','T₂E = '+T2e+' µs']]);
+}
+bind(['rmT2s','rmT2e','rmD','rmX'],ramsey); onSec('uyumsuzluk',ramsey);
+statics.push(()=>{
+  const i=LI(), N=[
+    [['TLS dielektrik kayıp','TLS dielectric loss'],'T₁',['Yüzey oksitlerinde rezonant soğurma','Resonant absorption in surface oxides'],['tan δ, ama güce bağlı','tan δ, but power dependent'],['Malzeme, yüzey temizliği, katılım oranı','Materials, surface cleaning, participation ratio']],
+    [['Purcell','Purcell'],'T₁',['Enerjinin okuma hattına sızması','Energy leaking into the readout line'],['Port yüklemesi','Port loading'],['Purcell filtresi, büyük Δ','Purcell filter, larger Δ']],
+    [['Kuasiparçacıklar','Quasiparticles'],'T₁, T₂',['Kırılmış Cooper çiftlerinin tünellemesi','Tunnelling of broken Cooper pairs'],['Kayıplı iletkenlik','Lossy conductance'],['IR filtre, kalkan, tuzak','IR filters, shielding, traps']],
+    [['Termal fotonlar','Thermal photons'],'T₂',['Rezonatördeki fotonların ac-Stark kayması','ac-Stark shift from resonator photons'],['Gürültülü LO\'nun FM\'i','FM on a noisy LO'],['Zayıflatıcı bütçesi','Attenuator budget']],
+    [['Akı gürültüsü (1/f)','Flux noise (1/f)'],'T₂',['Yüzey spinleri SQUID akısını oynatır','Surface spins jiggle the SQUID flux'],['VCO ayar girişindeki gürültü','Noise on a VCO tuning input'],['Tatlı nokta, sabit frekanslı qubit','Sweet spot, fixed-frequency qubit']],
+  ];
+  thead($('#noiseH'),[L('Kaynak','Source'),L('Etki','Affects'),L('Mekanizma','Mechanism'),'RF ⇄',L('Önlem','Mitigation')]);
+  $('#noiseT').innerHTML=N.map(r=>'<tr>'+r.map(c=>`<td>${Array.isArray(c)?c[i]:c}</td>`).join('')+'</tr>').join('');
+});
+
+/* ================= 13 gates ================= */
+statics.push(()=>{
+  const i=LI(), G=[
+    ['<b>X</b>',['x etrafında π','π about x'],['f₀₁\'de I kanalında π darbe (DRAG)','π pulse on I at f₀₁ (DRAG)'],'20–50 ns'+DAG],
+    ['<b>Y</b>',['y etrafında π','π about y'],['Aynı darbe, LO fazı +90°','Same pulse, LO phase +90°'],'20–50 ns'+DAG],
+    ['<b>√X</b>',['x etrafında π/2','π/2 about x'],['Yarım alanlı darbe','Half-area pulse'],'20–50 ns'+DAG],
+    ['<b>Z, S, T</b>',['z etrafında π, π/2, π/4','π, π/2, π/4 about z'],['Sanal Z: darbe yok, sonraki darbelerin fazı kayar','Virtual Z: no pulse, later pulses are phase shifted'],'0 ns'],
+    ['<b>CZ</b>',['|11⟩ fazı −1','−1 phase on |11⟩'],['Akı darbesiyle |11⟩ ↔ |20⟩ etrafında bir tur','A flux pulse making one cycle around |11⟩ ↔ |20⟩'],'30–100 ns'+DAG],
+    ['<b>CNOT</b>',['kontrol 1 ise hedefi çevir','flip target if control is 1'],['H · CZ · H, ya da cross-resonance','H · CZ · H, or cross-resonance'],'100–400 ns'+DAG],
+    ['<b>'+L('Ölçüm','Measure')+'</b>',['|0⟩/|1⟩ izdüşümü','|0⟩/|1⟩ projection'],['f_r\'de ton + heterodin + eşik','Tone at f_r + heterodyne + threshold'],'0.2–2 µs'+DAG],
+  ];
+  thead($('#gateH'),[L('Kapı','Gate'),L('Matematik','Math'),L('Fiziksel darbe','Physical pulse'),L('Süre','Duration')]);
+  $('#gateT').innerHTML=G.map(r=>`<tr><td>${r[0]}</td><td>${r[1][i]}</td><td>${r[2][i]}</td><td class="n">${r[3]}</td></tr>`).join('');
+});
+const S2=Math.SQRT1_2;
+const M1={H:[[S2,0],[S2,0],[S2,0],[-S2,0]],X:[[0,0],[1,0],[1,0],[0,0]],Y:[[0,0],[0,-1],[0,1],[0,0]],Z:[[1,0],[0,0],[0,0],[-1,0]],S:[[1,0],[0,0],[0,0],[0,1]],T:[[1,0],[0,0],[0,0],[S2,S2]],SX:[[.5,.5],[.5,-.5],[.5,-.5],[.5,.5]]};
+const PUL={H:['Sanal Z(π/2) → √X → Sanal Z(π/2)','Virtual Z(π/2) → √X → virtual Z(π/2)'],X:['π darbe, I kanalı','π pulse, I channel'],Y:['π darbe, Q kanalı','π pulse, Q channel'],Z:['Sanal Z(π)','Virtual Z(π)'],S:['Sanal Z(π/2)','Virtual Z(π/2)'],T:['Sanal Z(π/4)','Virtual Z(π/4)'],SX:['π/2 darbe','π/2 pulse'],CNOT:['Cross-resonance ya da H·CZ·H','Cross-resonance or H·CZ·H'],CZ:['Akı darbesi |11⟩↔|20⟩','Flux pulse |11⟩↔|20⟩']};
+const cm=(a,b)=>[a[0]*b[0]-a[1]*b[1],a[0]*b[1]+a[1]*b[0]], ca=(a,b)=>[a[0]+b[0],a[1]+b[1]];
+let nq=3, circ=[];
+function fillSel(){
+  const opts=[...Array(nq).keys()].map(i=>`<option value="${i}">q${i}</option>`).join('');
+  const t=+$('#kT').value||0, c=+$('#kC').value||0; $('#kT').innerHTML=opts; $('#kC').innerHTML=opts;
+  const tt=t<nq?t:0; $('#kT').value=tt; $('#kC').value=(c<nq&&c!==tt)?c:(tt+1)%nq; $('#kC').disabled=!['CNOT','CZ'].includes($('#kG').value);
+}
+function simulate(){
+  const N=1<<nq, s=Array.from({length:N},(_,i)=>i?[0,0]:[1,0]);
+  circ.forEach(op=>{
+    if(M1[op.g]){const M=M1[op.g], b=1<<op.t; for(let i=0;i<N;i++) if(!(i&b)){const j=i|b, a0=s[i], a1=s[j]; s[i]=ca(cm(M[0],a0),cm(M[1],a1)); s[j]=ca(cm(M[2],a0),cm(M[3],a1));}}
+    else if(op.g==='CNOT'){const bc=1<<op.c, bt=1<<op.t; for(let i=0;i<N;i++) if((i&bc)&&!(i&bt)){const j=i|bt; const tmp=s[i]; s[i]=s[j]; s[j]=tmp;}}
+    else if(op.g==='CZ'){const bc=1<<op.c, bt=1<<op.t; for(let i=0;i<N;i++) if((i&bc)&&(i&bt)) s[i]=[-s[i][0],-s[i][1]];}
+  });
+  return s;
+}
+function sim(){
+  const W=Math.max(600,90+circ.length*56+40), H=40+nq*40, svg=$('#circ'); svg.setAttribute('viewBox',`0 0 ${W} ${H}`); svg.style.width=W+'px';
+  const Y=q=>30+(nq-1-q)*40; let s='';
+  for(let q=0;q<nq;q++) s+=`<text x="8" y="${Y(q)+4}">q${q} |0⟩</text><path class="thin" d="M70 ${Y(q)}H${W-10}"/>`;
+  circ.forEach((op,k)=>{const x=100+k*56;
+    if(op.c!==undefined){const y1=Y(op.c), y2=Y(op.t); s+=`<path class="stroke" d="M${x} ${y1}V${y2}"/><circle cx="${x}" cy="${y1}" r="5" style="fill:var(--fg)"/>`;
+      s+=op.g==='CNOT'?`<circle cx="${x}" cy="${y2}" r="11" class="fillsf"/><path class="stroke" d="M${x-11} ${y2}h22M${x} ${y2-11}v22"/>`:`<circle cx="${x}" cy="${y2}" r="5" style="fill:var(--fg)"/>`;}
+    else s+=`<rect x="${x-16}" y="${Y(op.t)-14}" width="32" height="28" rx="3" class="${['Z','S','T'].includes(op.g)?'fillwv':'fillacc'}"/><text x="${x}" y="${Y(op.t)+4}" text-anchor="middle">${op.g==='SX'?'√X':op.g}</text>`;});
+  if(!circ.length) s+=`<text x="100" y="${H-8}" class="m">${L('Devre boş.','Empty circuit.')}</text>`;
+  svg.innerHTML=s;
+  const st=simulate();
+  $('#kBars').innerHTML=st.map((a,i)=>{const p=a[0]*a[0]+a[1]*a[1], ph=Math.atan2(a[1],a[0])*180/Math.PI; return `<div class="bar"><span>|${i.toString(2).padStart(nq,'0')}⟩</span><i style="width:${(p*100).toFixed(2)}%"></i><span>${(p*100).toFixed(1)} % · ${p>1e-12?ph.toFixed(0)+'°':'—'}</span></div>`;}).join('');
+  $('#kPulses').innerHTML=circ.length?circ.map(op=>`<li><b>${op.g==='SX'?'√X':op.g}</b> ${op.c!==undefined?'q'+op.c+'→q'+op.t:'q'+op.t}: ${PUL[op.g][LI()]}</li>`).join(''):'<li>—</li>';
+}
+calcs.push(sim);
+$('#kN').addEventListener('change',()=>{nq=+$('#kN').value; circ=circ.filter(o=>o.t<nq&&(o.c===undefined||o.c<nq)); fillSel(); sim();});
+$('#kG').addEventListener('change',fillSel); $('#kT').addEventListener('change',fillSel);
+$('#kAdd').addEventListener('click',()=>{const g=$('#kG').value, t=+$('#kT').value, c=+$('#kC').value; if(['CNOT','CZ'].includes(g)){ if(c===t) return; circ.push({g,t,c}); } else circ.push({g,t}); sim();});
+$('#kUndo').addEventListener('click',()=>{circ.pop(); sim();});
+$('#kClr').addEventListener('click',()=>{circ=[]; sim();});
+$('#kBell').addEventListener('click',()=>{circ=[{g:'H',t:0},{g:'CNOT',c:0,t:1}]; sim();});
+$('#kGHZ').addEventListener('click',()=>{ if(nq<3){nq=3; $('#kN').value='3'; fillSel();} circ=[{g:'H',t:0},{g:'CNOT',c:0,t:1},{g:'CNOT',c:1,t:2}]; sim();});
+fillSel(); circ=[{g:'H',t:0},{g:'CNOT',c:0,t:1},{g:'CNOT',c:1,t:2}];
+
+/* ================= 14 scaling ================= */
+const SC=[['50 K',3.6e-3,10],['4 K',3.8e-4,1],['Still',7e-7,10e-3],['Cold plate',4e-8,100e-6],['MXC',1e-9,10e-6]];
+$('#scT').innerHTML=SC.map((s,i)=>`<tr><td>${s[0]}</td><td><input id="scQ${i}" type="number" step="any" min="0" value="${s[1].toExponential()}" aria-label="W/cable ${s[0]}" style="width:110px"></td><td><input id="scC${i}" type="number" step="any" min="0" value="${s[2].toExponential()}" style="width:110px" aria-label="W cooling ${s[0]}"></td><td class="n" id="scH${i}"></td><td class="n" id="scX${i}"></td></tr>`).join('');
+function scale(){
+  thead($('#scH'),[L('Kademe','Stage'),L('Kablo başına ısı (W)','Heat per cable (W)')+DAG,L('Soğutma gücü (W)','Cooling power (W)')+DAG,L('Toplam ısı','Total heat'),L('En fazla qubit','Max qubits')]);
+  const N=Math.max(1,Math.round(v('scN'))), Fx=Math.max(0,v('scF')), M=Math.max(1,Math.round(v('scM'))), o=$('#oSc');
+  const lines=N*(1+Fx)+2*Math.ceil(N/M), perQ=(1+Fx)+2/M; let worst=Infinity, wi=0, bars='';
+  SC.forEach((s,i)=>{const q=v('scQ'+i), c=v('scC'+i), h=lines*q, u=c>0?h/c:Infinity, mxq=q>0?Math.floor(c/q/perQ):Infinity;
+    if(mxq<worst){worst=mxq;wi=i;}
+    $('#scH'+i).textContent=si(h,'W'); $('#scX'+i).textContent=isFinite(mxq)?mxq.toLocaleString(lang==='en'?'en-US':'tr-TR'):'∞';
+    const pct=Math.min(100,u*100), cls=u>1?'b':u>0.5?'w':'';
+    bars+=`<div><span>${s[0]}</span><span class="trk"><i class="${cls}" style="width:${pct.toFixed(1)}%"></i></span><span>${(u*100).toFixed(u<0.01?3:1)} %</span></div>`;});
+  $('#scLoad').innerHTML=bars;
+  rows(o,[[L('Toplam koaks hat','Total coax lines'),lines.toLocaleString()],[L('Darboğaz kademe','Bottleneck stage'),SC[wi][0],'warn'],[L('Bu kablolamayla en fazla','Maximum with this wiring'),(isFinite(worst)?worst.toLocaleString():'∞')+' qubit',N>worst?'bad':'good']]);
+}
+bind(['scN','scF','scM',...SC.flatMap((_,i)=>['scQ'+i,'scC'+i])],scale);
+
+/* ================= 15 systems ================= */
+statics.push(()=>{
+  const i=LI(), R=[
+    ['Google Willow (QEC)','2024','105','68 ± 13 µs',['0.035 % (ort., eşzamanlı)','0.035 % (mean, simultaneous)'],['0.33 % CZ (ort., eşzamanlı)','0.33 % CZ (mean, simultaneous)'],['0.77 % (ort., eşzamanlı)','0.77 % (mean, simultaneous)'],'[15]'],
+    ['IQM Garnet','2024',['20 (+30 kuplör)','20 (+30 couplers)'],'—','—',['0.5 % CZ (medyan; sadakat 99.5 %)','0.5 % CZ (median; fidelity 99.5 %)'],'—','[16]'],
+    ['Rigetti Ankaa-3','2024','84','—','—',['1.0 % iSWAP (medyan, 72 ns) · 0.5 % fSim (56 ns)','1.0 % iSWAP (median, 72 ns) · 0.5 % fSim (56 ns)'],'—','[17]'],
+    ['IBM Heron r2','2024','156','—','—',['≈ 0.3 % (medyan, 2024 kalibrasyonu)','≈ 0.3 % (median, 2024 calibration)'],'—','[18]'+DAG],
+  ];
+  thead($('#sysH'),[L('Sistem','System'),L('Yıl','Year'),'Qubit','T₁',L('1q hata','1q error'),L('2q hata','2q error'),L('Okuma hatası','Readout error'),L('Kaynak','Source')]);
+  $('#sysT').innerHTML=R.map(r=>'<tr>'+r.map((c,k)=>`<td${k>=1&&k<=3?' class="n"':''}>${Array.isArray(c)?c[i]:c}</td>`).join('')+'</tr>').join('');
+});
+
+/* ================= 16 problems ================= */
+const PROBS=[
+ {q:['Si alt taş (ε<sub>r</sub> = 11.45) üzerinde f<sub>r</sub> = 7.2 GHz olan bir λ/4 CPW okuma rezonatörü tasarlıyorsunuz. ε<sub>eff</sub> ≈ (ε<sub>r</sub>+1)/2 ile hattın uzunluğu kaç mm?','You are designing a λ/4 CPW readout resonator at f<sub>r</sub> = 7.2 GHz on Si (ε<sub>r</sub> = 11.45). Using ε<sub>eff</sub> ≈ (ε<sub>r</sub>+1)/2, how long is the line in mm?'],u:'mm',tol:.02,
+  a:()=>K.c/(4*7.2e9*Math.sqrt(6.225))*1e3,
+  s:a=>[`ε<sub>eff</sub> = 6.225 → √ε<sub>eff</sub> = 2.495; ℓ = c/(4f√ε<sub>eff</sub>) = 3×10⁸/(4 · 7.2×10⁹ · 2.495) = ${a.toFixed(3)} mm`,`ε<sub>eff</sub> = 6.225 → √ε<sub>eff</sub> = 2.495; ℓ = c/(4f√ε<sub>eff</sub>) = 3×10⁸/(4 · 7.2×10⁹ · 2.495) = ${a.toFixed(3)} mm`]},
+ {q:['Qubit–rezonatör ayrımı Δ/2π = −1.5 GHz, kuplaj g/2π = 80 MHz, rezonatör çizgi genişliği κ/2π = 1 MHz. Purcell filtresi yokken T<sub>1</sub> sınırı kaç µs?','Qubit–resonator detuning Δ/2π = −1.5 GHz, coupling g/2π = 80 MHz, resonator linewidth κ/2π = 1 MHz. Without a Purcell filter, what is the T<sub>1</sub> limit in µs?'],u:'µs',tol:.03,
+  a:()=>((1500/80)**2)/(TAU*1e6)*1e6,
+  s:a=>[`(Δ/g)² = (1500/80)² = 351.6; κ = 2π · 10⁶ s⁻¹; T<sub>1</sub> = 351.6/κ = ${a.toFixed(1)} µs`,`(Δ/g)² = (1500/80)² = 351.6; κ = 2π · 10⁶ s⁻¹; T<sub>1</sub> = 351.6/κ = ${a.toFixed(1)} µs`]},
+ {q:['5 GHz sürüş hattında 50 K\'de 0 dB, 4 K\'de 20 dB, still\'de (0.8 K) 10 dB, cold plate\'te (0.1 K) 10 dB zayıflatıcı var. MXC\'de (10 mK) en az kaç dB zayıflatıcıyla çipe ulaşan gürültü n̄ ≤ 10⁻³ olur? (tam sayı dB)','A 5 GHz drive line has 0 dB at 50 K, 20 dB at 4 K, 10 dB at the still (0.8 K) and 10 dB at the cold plate (0.1 K). What is the minimum MXC (10 mK) attenuation, in whole dB, that brings the noise at the chip to n̄ ≤ 10⁻³?'],u:'dB',tol:0,abs:1,
+  a:()=>{const f=5e9; let n=nth(f,300); [[50,0],[4,20],[0.8,10],[0.1,10]].forEach(([T,A])=>{const a=10**(A/10); n=n/a+(1-1/a)*nth(f,T);}); for(let A=0;A<80;A++){const a=10**(A/10), m=n/a+(1-1/a)*nth(f,0.01); if(m<=1e-3) return A;} return NaN;},
+  s:a=>[`Cold plate çıkışında n̄ ≈ 0.63. MXC'de n̄ ≈ 0.63/A + n̄<sub>th</sub>(10 mK) ≤ 10⁻³ → A ≥ 632 → ${a} dB.`,`n̄ ≈ 0.63 leaving the cold plate. At the MXC, n̄ ≈ 0.63/A + n̄<sub>th</sub>(10 mK) ≤ 10⁻³ → A ≥ 632 → ${a} dB.`]},
+ {q:['Okuma zinciri: 0.5 dB kayıp (10 mK) → TWPA (G = 20 dB, T<sub>e</sub> = 0.3 K) → 1 dB kayıp (1 K) → HEMT (T<sub>e</sub> = 2.5 K). Sistem gürültü sıcaklığı kaç K?','Readout chain: 0.5 dB loss (10 mK) → TWPA (G = 20 dB, T<sub>e</sub> = 0.3 K) → 1 dB loss (1 K) → HEMT (T<sub>e</sub> = 2.5 K). What is the system noise temperature in K?'],u:'K',tol:.03,
+  a:()=>{let T=0,G=1; [[0,0.5,0.01],[1,20,0.3],[0,1,1],[1,40,2.5]].forEach(([t,x,Tp])=>{let Gi,Te; if(!t){const l=10**(x/10); Gi=1/l; Te=(l-1)*Tp;} else {Gi=10**(x/10); Te=Tp;} T+=Te/G; G*=Gi;}); return T;},
+  s:a=>[`Friis: T = (0.122·0.01) + 0.3/0.891 + (0.259·1)/89.1 + 2.5/70.8 ≈ ${a.toFixed(3)} K. TWPA baskın; HEMT katkısı yalnız ~0.035 K.`,`Friis: T = (0.122·0.01) + 0.3/0.891 + (0.259·1)/89.1 + 2.5/70.8 ≈ ${a.toFixed(3)} K. The TWPA dominates; the HEMT adds only ~0.035 K.`]},
+];
+statics.push(()=>{
+  const i=LI(), keep=PROBS.map((_,k)=>{const el=$('#pa'+k); return el?el.value:'';});
+  $('#probs').innerHTML=PROBS.map((p,k)=>`<div class="prob"><div class="kicker">${L('Problem','Problem')} ${k+1}</div><h4>${p.q[i]}</h4><div class="ans"><input id="pa${k}" type="number" step="any" aria-label="answer ${k+1}"><span class="mono">${p.u}</span><button class="btn pri" type="button" data-chk="${k}">${L('Kontrol et','Check')}</button></div><div class="res" id="pr${k}"></div><details><summary>${L('Çözüm','Solution')}</summary><p>${p.s(p.a())[i]}</p></details></div>`).join('');
+  keep.forEach((val,k)=>{ if(val) $('#pa'+k).value=val; });
+});
+$('#probs').addEventListener('click',e=>{const b=e.target.closest('[data-chk]'); if(!b) return; const k=+b.dataset.chk, p=PROBS[k], ans=p.a(), x=parseFloat($('#pa'+k).value), r=$('#pr'+k);
+  if(!isFinite(x)){r.className='res no'; r.textContent=L('Bir sayı girin.','Enter a number.'); return;}
+  const ok=p.abs!==undefined?Math.abs(x-ans)<=p.abs:Math.abs(x/ans-1)<=p.tol;
+  r.className='res '+(ok?'ok':'no'); r.textContent=ok?L('Doğru. ','Correct. ')+sig(ans,4)+' '+p.u:L('Henüz değil. İpucu: çözümü açmadan ilgili hesap makinesini deneyin.','Not yet. Hint: try the related calculator before opening the solution.');});
+
+/* ================= 17 glossary & tools, 18 changelog ================= */
+statics.push(()=>{
+  const i=LI(), GL=[
+    [['LC tank','LC tank'],['Kuantum harmonik osilatör','Quantum harmonic oscillator'],['Seviyeler ħω aralıklı','Levels spaced by ħω']],
+    [['Doğrusal olmayan endüktör','Nonlinear inductor'],['Josephson junction','Josephson junction'],['L_J = Φ₀/(2πI_c cos φ)','L_J = Φ₀/(2πI_c cos φ)']],
+    [['Varaktörlü VCO tankı','Varactor-tuned VCO tank'],['Akı ayarlı transmon','Flux-tunable transmon'],['Ayar girişi = akı','Tuning input = flux']],
+    [['Kerr / Duffing kayması','Kerr / Duffing shift'],['Anharmonisite α','Anharmonicity α'],['≈ −E_C','≈ −E_C']],
+    [['Yüksüz Q','Unloaded Q'],['Q = ωT₁','Q = ωT₁'],['Enerji kaybı','Energy loss']],
+    [['Faz gürültüsü','Phase noise'],['T₂, dephasing','T₂, dephasing'],['Ramsey, echo','Ramsey, echo']],
+    [['Rezonans çekilmesi','Frequency pulling'],['Dispersif kayma χ','Dispersive shift χ'],['Okuma mekanizması','Readout mechanism']],
+    [['Port yüklemesi','Port loading'],['Purcell bozunumu','Purcell decay'],['Γ ∝ κ(g/Δ)²','Γ ∝ κ(g/Δ)²']],
+    [['Diplexer / BPF','Diplexer / BPF'],['Purcell filtresi','Purcell filter'],['f_q\'yu reddet','Reject f_q']],
+    [['Friis, gürültü sıcaklığı','Friis, noise temperature'],['Okuma verimi η','Readout efficiency η'],['Sınır hf/2k_B','Limit hf/2k_B']],
+    [['Parametrik yükselteç','Parametric amplifier'],['JPA / TWPA','JPA / TWPA'],['Pompa = LO','Pump = LO']],
+    [['IQ modülasyon','IQ modulation'],['Tek qubit kapısı','Single-qubit gate'],['Faz = eksen, alan = açı','Phase = axis, area = angle']],
+    [['FDM alıcı','FDM receiver'],['Çoklanmış okuma','Multiplexed readout'],['Tek LO, çok IF','One LO, many IFs']],
+    [['Zayıflatıcı zinciri','Attenuator chain'],['Hat termalizasyonu','Line thermalisation'],['Foton sayısı bütçesi','Photon-number budget']],
+    [['Dielektrik tan δ','Dielectric tan δ'],['TLS kaybı','TLS loss'],['Tek fotonda en kötü','Worst at one photon']],
+  ];
+  thead($('#glosH'),[L('RF terimi','RF term'),L('Kuantum karşılığı','Quantum counterpart'),L('Not','Note')]);
+  $('#glosT').innerHTML=GL.map(r=>'<tr>'+r.map(c=>`<td>${c[i]}</td>`).join('')+'</tr>').join('');
+  const TL=[['scqubits',['Hamiltonyenlerin tam çözümü; buradaki yaklaşımların doğrulanması','Exact Hamiltonian solutions; checks the approximations used here']],['Qiskit Metal',['Çip yerleşimi, kapasitans matrisi','Chip layout, capacitance matrix']],['pyEPR',['Eigenmode EM\'den χ, α, Kerr','χ, α and Kerr from eigenmode EM']],['Sonnet, HFSS, CST, openEMS',['CPW, rezonatör, paket EM simülasyonu','EM simulation of CPW, resonators and packages']],['QuTiP',['Gürültülü dinamik ve darbe simülasyonu','Noisy dynamics and pulse simulation']],['scikit-rf / resonator',['S-parametre işleme, rezonatör uydurma','S-parameter handling, resonator fitting']]];
+  thead($('#toolH'),[L('Araç','Tool'),L('Ne için','Used for')]);
+  $('#toolT').innerHTML=TL.map(([n,d])=>`<tr><td>${n}</td><td>${d[i]}</td></tr>`).join('');
+  const CH=[['1.0','2026-10-29',['Kuantum Tezgahı: cihaz ekranları (VNA, Smith, spektrum analizörü, osiloskop), punch-out, çip haritası, etkileşimli kriyostat, çoklanmış okuma, ölçekleme, gerçek sistemler, tasarım problemleri.','Quantum Bench: instrument screens (VNA, Smith, spectrum analyser, oscilloscope), punch-out, chip map, interactive cryostat, multiplexed readout, scaling, real systems, design problems.']],
+    ['0.3','2026-10-29',['Gerçek fotoğraflar ve yeni arayüz.','Real photographs and a new interface.']],['0.2','2026-10-29',['Türkçe/İngilizce.','Turkish/English.']],['0.1','2026-10-29',['İlk sürüm: hesap makineleri.','First version: calculators.']]];
+  thead($('#chgH'),[L('Sürüm','Version'),L('Tarih','Date'),L('Değişiklik','Change')]);
+  $('#chgT').innerHTML=CH.map(([a,b,c])=>`<tr><td class="n">${a}</td><td class="n">${b}</td><td>${c[i]}</td></tr>`).join('');
+});
+
+/* ================= hero bloch ================= */
+(function heroBloch(){
+  const cv=$('#heroBloch'); if(!cv) return;
+  const still=window.matchMedia('(prefers-reduced-motion: reduce)').matches, trail=[]; let raf=null;
+  function draw(now){
+    const P=prep(cv); if(!P) return; const {g,W,H}=P, R=W*0.36, cx=W/2, cy=H/2, az=-0.6, el=0.35, t=now/1000;
+    const pr=p=>{const x1=p[0]*Math.cos(az)-p[1]*Math.sin(az), y1=p[0]*Math.sin(az)+p[1]*Math.cos(az); return [cx+R*x1, cy-R*(y1*Math.sin(el)+p[2]*Math.cos(el))];};
+    g.lineWidth=1; g.strokeStyle=css('--muted'); g.globalAlpha=.6; g.beginPath(); g.arc(cx,cy,R,0,TAU); g.stroke();
+    g.beginPath(); for(let i=0;i<=64;i++){const q=pr([Math.cos(i/64*TAU),Math.sin(i/64*TAU),0]); i?g.lineTo(q[0],q[1]):g.moveTo(q[0],q[1]);} g.stroke(); g.globalAlpha=1;
+    const th=1.05+0.35*Math.sin(t*0.5), ph=t*1.3, s=[Math.sin(th)*Math.cos(ph),Math.sin(th)*Math.sin(ph),Math.cos(th)];
+    trail.push(s); if(trail.length>90) trail.shift();
+    g.strokeStyle=css('--t2'); trail.forEach((p,i)=>{ if(!i) return; const a=pr(trail[i-1]), b=pr(p); g.globalAlpha=i/trail.length; g.lineWidth=1.6; g.beginPath(); g.moveTo(a[0],a[1]); g.lineTo(b[0],b[1]); g.stroke(); });
+    g.globalAlpha=1; const q=pr(s); g.strokeStyle=css('--t1'); g.lineWidth=2; g.beginPath(); g.moveTo(cx,cy); g.lineTo(q[0],q[1]); g.stroke();
+    g.fillStyle=css('--t1'); g.beginPath(); g.arc(q[0],q[1],3.5,0,TAU); g.fill();
+    g.fillStyle=css('--fg'); g.font='10px '+css('--f-mono'); g.textAlign='center'; g.fillText('|0⟩',cx,cy-R-6); g.fillText('|1⟩',cx,cy+R+13);
+  }
+  function loop(now){ draw(now); raf=(!still&&!document.hidden&&!$('#tezgah').hidden)?requestAnimationFrame(loop):null; }
+  const kick=()=>{ if(!raf) raf=requestAnimationFrame(loop); };
+  onSec('tezgah',kick); document.addEventListener('visibilitychange',kick);
+  if(still) onSec('tezgah',()=>{ for(let k=0;k<90;k++) draw(2000+k*16); });
+})();
+
+applyLang(lang);
+route();
+})();
+</script>
+
+</body>
+</html>
